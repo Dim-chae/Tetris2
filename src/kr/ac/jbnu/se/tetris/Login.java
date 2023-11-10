@@ -113,7 +113,7 @@ public class Login extends JPanel {
         if(id.isEmpty() || pw.length == 0 || confirmPw.length == 0){
             JOptionPane.showMessageDialog(null, "ID와 Password를 입력해주세요.", "회원가입 실패", JOptionPane.ERROR_MESSAGE);
         } else if(!Arrays.equals(pw, confirmPw)){
-            JOptionPane.showMessageDialog(null, "Password가 일치하지 않습니다.", "회원가입 실패", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Password가 일치하지 않습니다.", "Password 불일치", JOptionPane.ERROR_MESSAGE);
         } else {
             // 회원가입 성공
             // 여기에서 서버로 회원가입 정보를 전송하고 응답을 처리해야 합니다.

@@ -3,9 +3,9 @@ package kr.ac.jbnu.se.tetris;
 import javax.swing.*;
 
 public class SprintMode extends Board{
-    private final int LINE_TO_CLEAR = 40;
+    private static final int LINE_TO_CLEAR = 40;
 
-    private Timer spModeTimer;
+    private final Timer spModeTimer;
     private float runningTime = 0;
 
     public SprintMode(Tetris tetris){

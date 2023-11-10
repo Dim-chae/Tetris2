@@ -73,19 +73,19 @@ public class MainMenu extends JPanel {
 
         // 스프린트 모드 버튼
         sprintButton.addActionListener(e -> {
-            System.out.println("스프린트 모드 선택됨");
+//            System.out.println("스프린트 모드 선택됨");
             tetris.switchPanel(new SprintMode(tetris));
         }); centerPanel.add(setStyledButton(sprintButton, 200, 40));
 
         // 타임어택 모드 버튼
         timeattackButton.addActionListener(e -> {
-            System.out.println("타임어택 모드 선택됨");
+//            System.out.println("타임어택 모드 선택됨");
             tetris.switchPanel(new TimeAttackMode(tetris));
         }); centerPanel.add(setStyledButton(timeattackButton, 200, 50));
 
         // 그림자 모드 버튼
         ghostModeButton.addActionListener(e -> {
-            System.out.println("고스트 모드 선택됨");
+//            System.out.println("고스트 모드 선택됨");
             tetris.switchPanel(new GhostMode(tetris));
         }); centerPanel.add(setStyledButton(ghostModeButton, 200, 50));
 
@@ -97,19 +97,19 @@ public class MainMenu extends JPanel {
 
         // 업적 관리 버튼
         achievementButton.addActionListener(e -> {
-            System.out.println("업적 관리 선택됨");
+//            System.out.println("업적 관리 선택됨");
             tetris.switchPanel(new AchievementMenu(tetris));
         }); bottomPanel.add(setStyledButton(achievementButton, 75, 40));
         
         // 랭킹 버튼
         rankingButton.addActionListener(e -> {
-            System.out.println("랭킹 선택됨");
+//            System.out.println("랭킹 선택됨");
             tetris.switchPanel(new Ranking(tetris));
         }); bottomPanel.add(setStyledButton(rankingButton, 75, 40));
 
         // 설정 버튼
         settingButton.addActionListener(e -> {
-            System.out.println("설정 선택됨");
+//            System.out.println("설정 선택됨");
             tetris.switchPanel(new SettingMenu(tetris));
         }); bottomPanel.add(setStyledButton(settingButton, 75, 40));
 

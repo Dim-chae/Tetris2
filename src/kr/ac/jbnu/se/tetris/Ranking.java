@@ -14,7 +14,7 @@ import java.util.List;
 
 public class Ranking extends JPanel {
     Tetris tetris;
-    private List<RankingEntry> rankingList;
+    private transient List<RankingEntry> rankingList;
 
     public Ranking(Tetris tetris) {
         this.tetris = tetris;
@@ -54,7 +54,7 @@ public class Ranking extends JPanel {
         backButton.setForeground(Color.WHITE);
         backButton.setFont(new Font("맑은 고딕", Font.BOLD, 13));
         backButton.addActionListener(e -> {
-            System.out.println("뒤로 가기 버튼 선택됨");
+//            System.out.println("뒤로 가기 버튼 선택됨");
             tetris.switchPanel(new MainMenu(tetris));
         });
         add(backButton, BorderLayout.SOUTH);

@@ -6,6 +6,7 @@ public class Shape {
 	private Tetrominoes pieceShape;
 	private int coords[][];
 	private int[][][] coordsTable;
+	private final Random ran = new Random();
 
 	public Shape() { 
 		coords = new int[4][2];
@@ -51,8 +52,7 @@ public class Shape {
 	}
 
 	public String setRanShape(){
-		Random r = new Random();
-		int x = Math.abs(r.nextInt()) % 7 + 1;
+		int x = Math.abs(ran.nextInt()) % 7 + 1;
 		Tetrominoes[] values = Tetrominoes.values();
 		return values[x].toString();
 	}

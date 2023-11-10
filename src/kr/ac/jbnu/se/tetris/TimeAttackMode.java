@@ -3,9 +3,9 @@ package kr.ac.jbnu.se.tetris;
 import javax.swing.*;
 
 public class TimeAttackMode extends Board{
-    private final float TIME_LIMIT = 40.0f;
+    private static final float TIME_LIMIT = 40.0f;
     private float remainingTime = TIME_LIMIT;
-    private Timer taModeTimer;
+    private final Timer taModeTimer;
 
     public TimeAttackMode(Tetris tetris) {
         super(tetris, "타임어택 모드");

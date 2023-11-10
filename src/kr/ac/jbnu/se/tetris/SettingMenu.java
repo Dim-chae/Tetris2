@@ -5,6 +5,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.*;
+import javax.swing.SwingConstants;
 
 public class SettingMenu extends JPanel {
     private JSlider volumeSlider;
@@ -13,7 +14,7 @@ public class SettingMenu extends JPanel {
         setLayout(new FlowLayout());
 
         // 볼륨 조절 슬라이더 생성
-        volumeSlider = new JSlider(JSlider.HORIZONTAL, 0, 100, tetris.getBgmVolume()); // 볼륨 범위를 0에서 100으로 설정하고 기본값을 50으로 설정
+        volumeSlider = new JSlider(SwingConstants.HORIZONTAL, 0, 100, tetris.getBgmVolume()); // 볼륨 범위를 0에서 100으로 설정하고 기본값을 50으로 설정
         volumeSlider.setMajorTickSpacing(10); // 주요 눈금 간격 설정
         volumeSlider.setPaintTicks(true); // 눈금 표시
         volumeSlider.setPaintLabels(true); // 눈금 라벨 표시
@@ -31,7 +32,7 @@ public class SettingMenu extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // 설정을 저장하고 설정 메뉴를 닫도록 구현
-                System.out.println("볼륨 설정 : " + tetris.getBgmVolume());
+//                System.out.println("볼륨 설정 : " + tetris.getBgmVolume());
                 tetris.switchPanel(new MainMenu(tetris)); // 메인 메뉴로 이동
             }
         });
@@ -51,7 +52,7 @@ public class SettingMenu extends JPanel {
         JButton logoutButton = new JButton("로그아웃");
         logoutButton.setPreferredSize(new Dimension(200, 50));
         logoutButton.addActionListener(e -> {
-            System.out.println("로그아웃 선택됨");
+//            System.out.println("로그아웃 선택됨");
             tetris.switchPanel(new Login(tetris));
         }); add(setStyledButton(logoutButton));
     }

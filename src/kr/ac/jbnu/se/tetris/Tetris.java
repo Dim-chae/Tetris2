@@ -12,8 +12,8 @@ public class Tetris extends JFrame {
         setSize(400, 400);
         setTitle("Tetris");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setVisible(false);
         setLayout(new BorderLayout());
+        setLocationRelativeTo(null);
         add(new MainMenu(this));
     }
 
@@ -70,10 +70,7 @@ public class Tetris extends JFrame {
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            Tetris tetris = new Tetris();
-            tetris.setLocationRelativeTo(null);
-            tetris.setVisible(true);
-        });
+        Tetris tetris = new Tetris();
+        tetris.setVisible(true);
     }
 }
