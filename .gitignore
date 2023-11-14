@@ -1,5 +1,6 @@
-.vscode
-bin
-.lib
-Tetris2.iml
 .idea
+.vscode
+Tetris2.iml
+bin
+lib
+out

@@ -1,7 +1,7 @@
 package kr.ac.jbnu.se.tetris;
 
 public class Item {
-    public Board board;
+    private Board board;
 
     public Item(Board board) {
         this.board = board;

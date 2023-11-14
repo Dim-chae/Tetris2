@@ -2,29 +2,27 @@ package kr.ac.jbnu.se.tetris;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
 
 public class AchievementMenu extends JPanel {
-    private Tetris tetris;
-    private transient List<AchievementItem> achievementList = new ArrayList<>();
-    private JPanel centerPanel;
+    private final Tetris tetris;
+    private final transient List<AchievementItem> achievementList = new ArrayList<>();
+    private final JPanel centerPanel = new JPanel(new GridLayout(10, 1, 10, 10));
     private static final String FONT_NAME = "맑은 고딕";
 
     public AchievementMenu(Tetris tetris) {
         this.tetris = tetris;
         initUI();
-        checkAchievement();
     }
 
     private void initUI() {
         setLayout(new BorderLayout());
         addTitleLabel();
+        checkAchievement();
         addCenterPanel();
-        addBackButton();
-        addAchievementListToScrollPane();
         addScrollPane();
+        addBackButton();
     }
 
     private void addTitleLabel(){
@@ -38,7 +36,7 @@ public class AchievementMenu extends JPanel {
     }
 
     private void addCenterPanel(){
-        centerPanel = new JPanel(new GridLayout(10, 1, 10, 10));
+        addAchievementListToScrollPane();
         centerPanel.setBackground(Color.WHITE);
         add(centerPanel, BorderLayout.CENTER);
     }
@@ -61,7 +59,7 @@ public class AchievementMenu extends JPanel {
 
     private void addAchievementListToScrollPane(){
         for (AchievementItem item : achievementList) {
-            JLabel itemLabel = new JLabel(item.getName() + " : " + item.getDescription());
+            JLabel itemLabel = new JLabel(item.name() + " : " + item.description());
             itemLabel.setBorder(BorderFactory.createLineBorder(new Color(70, 130, 180), 1));
             itemLabel.setFont(new Font(FONT_NAME, Font.PLAIN, 16));
             itemLabel.setForeground(new Color(70, 130, 180));
@@ -75,35 +73,21 @@ public class AchievementMenu extends JPanel {
     }
 
     // 업적 목록 생성
-    public void checkAchievement() {
-        if (tetris.getUserMaxScore() >= 5000)
+    private void checkAchievement() {
+        int userMaxscore = tetris.getUserMaxScore();
+        if (userMaxscore >= 5000)
             achievementList.add(new AchievementItem("초보자", "최고 점수 5000점 달성"));
-        if (tetris.getUserMaxScore() >= 10000)
+        if (userMaxscore >= 10000)
             achievementList.add(new AchievementItem("중수", "최고 점수 10000점 달성"));
-        if (tetris.getUserMaxScore() >= 15000)
+        if (userMaxscore >= 15000)
             achievementList.add(new AchievementItem("고수", "최고 점수 50000점 달성"));
-        if (tetris.getUserMaxScore() >= 20000)
+        if (userMaxscore >= 20000)
             achievementList.add(new AchievementItem("마스터", "최고 점수 100000점 달성"));
-        if (tetris.getUserMaxScore() >= 30000)
+        if (userMaxscore >= 30000)
             achievementList.add(new AchievementItem("전설", "최고 점수 250000점 달성"));
     }
 
     // 업적 아이템 클래스
-    private static class AchievementItem {
-        private String name;
-        private String description;
-
-        private AchievementItem(String name, String description) {
-            this.name = name;
-            this.description = description;
-        }
-
-        private String getName() {
-            return name;
-        }
-
-        private String getDescription() {
-            return description;
-        }
+        private record AchievementItem(String name, String description) {
     }
 }

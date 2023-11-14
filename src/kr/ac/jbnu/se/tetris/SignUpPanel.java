@@ -1,6 +1,5 @@
 package kr.ac.jbnu.se.tetris;
 
-import javax.swing.*;
 import java.awt.*;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -8,85 +7,41 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
-public class Login extends JPanel {
-    private Tetris tetris;
+import javax.swing.*;
 
-    private JPanel loginPanel = new JPanel(new GridLayout(3, 2, 10, 10));
-    private JPanel signUpPanel = new JPanel(new GridLayout(6, 2, 10, 10));
-    private JLabel loginId = new JLabel("ID : ");
-    private JLabel loginPw = new JLabel("Password : ");
-    private JLabel signUpId = new JLabel("ID : ");
-    private JLabel signUpPw = new JLabel("Password : ");
-    private JButton loginButton = new JButton("Login");
-    private JButton signUpButton = new JButton("Sign Up");
-    private JButton submitButton = new JButton("Submit");
-    private JButton backButton = new JButton("Back");
-    private JButton checkDuplicateButton = new JButton("ID 중복 확인");
-    private JTextField loginIdField = new JTextField(12);
-    private JPasswordField loginPwField = new JPasswordField(12);
-    private JTextField signUpIdField = new JTextField(12);
-    private JPasswordField signUpPwField = new JPasswordField(12);
-    private JPasswordField signUpConfirmPwField = new JPasswordField(12);
+public class SignUpPanel extends JPanel{
+    private final Tetris tetris;
+    private final JTextField signUpIdField = new JTextField(12);
+    private final JPasswordField signUpPwField = new JPasswordField(12);
+    private final JPasswordField signUpConfirmPwField = new JPasswordField(12);
+    private final JLabel signUpId = new JLabel("ID : ");
+    private final JLabel signUpPw = new JLabel("Password : ");
+    private final JButton checkDuplicateButton = new JButton("ID 중복 확인");
+    private final JButton submitButton = new JButton("Submit");
+    private final JButton backButton = new JButton("Back");
 
-    public Login(Tetris tetris){
+    public SignUpPanel(Tetris tetris){
         this.tetris = tetris;
-        add(loginPanel);
-        add(signUpPanel);
+        initUI();
+    }
 
-        loginPanel.setBorder(BorderFactory.createTitledBorder("로그인"));
-        loginPanel.add(loginId);
-        loginPanel.add(loginIdField);
-        loginPanel.add(loginPw);
-        loginPanel.add(loginPwField);
-        loginPanel.add(setStyledButton(loginButton));
-        loginPanel.add(setStyledButton(signUpButton));
-
-        signUpPanel.setBorder(BorderFactory.createTitledBorder("회원가입"));
-        signUpPanel.add(signUpId);
-        signUpPanel.add(signUpIdField);
-        signUpPanel.add(new JLabel()); // 빈 라벨
-        signUpPanel.add(setStyledButton(checkDuplicateButton));
-        signUpPanel.add(signUpPw);
-        signUpPanel.add(signUpPwField);
-        signUpPanel.add(new JLabel("Password 확인 : "));
-        signUpPanel.add(signUpConfirmPwField);
-        signUpPanel.add(setStyledButton(submitButton));
-        signUpPanel.add(setStyledButton(backButton));
-
-        signUpPanel.setVisible(false);
-
-        loginButton.addActionListener(e -> login());
-        signUpButton.addActionListener(e -> showSignUpPanel());
+    private void initUI(){
+        setLayout(new GridLayout(6, 2, 10, 10));
+        setBorder(BorderFactory.createTitledBorder("회원가입"));
+        add(signUpId);
+        add(signUpIdField);
+        add(new JLabel()); // 빈 라벨
+        add(setStyledButton(checkDuplicateButton));
+        add(signUpPw);
+        add(signUpPwField);
+        add(new JLabel("Password 확인 : "));
+        add(signUpConfirmPwField);
+        add(setStyledButton(submitButton));
+        add(setStyledButton(backButton));
 
         checkDuplicateButton.addActionListener(e -> checkDuplicate());
         submitButton.addActionListener(e -> submitSignUp());
         backButton.addActionListener(e -> showLoginPanel());
-    }
-
-     // 로그인 로직
-    private void login() {
-        String id = loginIdField.getText();
-        char[] pw = loginPwField.getPassword();
-        if (id.isEmpty() || pw.length == 0) {
-            JOptionPane.showMessageDialog(null, "ID와 Password를 입력해주세요.", "로그인 실패", JOptionPane.ERROR_MESSAGE);
-        } else {
-            boolean loginSuccess = checkLoginOnServer(id, new String(pw));
-            if (loginSuccess) {
-                // 로그인 성공
-                tetris.setUserId(id);
-                tetris.switchPanel(new MainMenu(tetris));
-            } else {
-                // 로그인 실패
-                JOptionPane.showMessageDialog(null, "로그인 실패 - 아이디 또는 비밀번호가 일치하지 않음", "로그인 실패", JOptionPane.ERROR_MESSAGE);
-            }
-        }
-    }
-
-    // 회원가입 패널 표시
-    private void showSignUpPanel() {
-        clearFields();
-        loginPanel.setVisible(false);
-        signUpPanel.setVisible(true);
     }
 
     // ID 중복 확인
@@ -96,7 +51,7 @@ public class Login extends JPanel {
             JOptionPane.showMessageDialog(null, "ID를 입력해주세요.", "ID 중복 확인 실패", JOptionPane.ERROR_MESSAGE);
         } else {
             boolean isDuplicate = checkDuplicateIdOnServer(id);
-
+    
             if (isDuplicate) {
                 JOptionPane.showMessageDialog(null, "이미 사용 중인 ID입니다.", "ID 중복 확인 실패", JOptionPane.ERROR_MESSAGE);
             } else {
@@ -128,21 +83,6 @@ public class Login extends JPanel {
         }
     }
 
-    // 로그인 패널 표시
-    private void showLoginPanel() {
-        clearFields();
-        signUpPanel.setVisible(false);
-        loginPanel.setVisible(true);
-    }
-
-    // id, pw, confirmPw 필드 초기화
-    private void clearFields() {
-        loginIdField.setText("");
-        loginPwField.setText("");
-        signUpIdField.setText("");
-        signUpPwField.setText("");
-        signUpConfirmPwField.setText("");
-    }
     // 서버로 회원가입 정보를 전송하는 함수
     private boolean sendRegistrationInfoToServer(String id, String password) {
         try {
@@ -206,35 +146,17 @@ public class Login extends JPanel {
 
         return false;
     }
-    
-    // 서버에서 로그인 확인
-    private boolean checkLoginOnServer(String id, String password) {
-        try {
-            URL url = new URL("http://localhost:3000/login"); // 백엔드 서버의 로그인 엔드포인트 URL로 수정
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
-            connection.setRequestMethod("POST");
-            connection.setRequestProperty("Content-Type", "application/json");
-            connection.setDoOutput(true);
+    // 로그인 패널 표시
+    private void showLoginPanel() {
+        clearFields();
+        tetris.switchPanel(new LoginPanel(tetris));
+    }
 
-            // ID와 Password를 JSON 형식으로 전송
-            String jsonInputString = "{\"id\": \"" + id + "\", \"password\": \"" + password + "\"}";
-            byte[] input = jsonInputString.getBytes(StandardCharsets.UTF_8);
-
-            try (OutputStream os = connection.getOutputStream()) {
-                os.write(input, 0, input.length);
-            }
-
-            // 응답 코드 확인
-            int responseCode = connection.getResponseCode();
-            if (responseCode == 200) {
-                return true; // 로그인 성공
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-
-        return false; // 로그인 실패
+    private void clearFields(){
+        signUpIdField.setText("");
+        signUpPwField.setText("");
+        signUpConfirmPwField.setText("");
     }
 
     private JButton setStyledButton(JButton button){

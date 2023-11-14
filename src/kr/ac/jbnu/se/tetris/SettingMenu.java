@@ -53,7 +53,7 @@ public class SettingMenu extends JPanel {
         logoutButton.setPreferredSize(new Dimension(200, 50));
         logoutButton.addActionListener(e -> {
 //            System.out.println("로그아웃 선택됨");
-            tetris.switchPanel(new Login(tetris));
+            tetris.switchPanel(new LoginPanel(tetris));
         }); add(setStyledButton(logoutButton));
     }
 

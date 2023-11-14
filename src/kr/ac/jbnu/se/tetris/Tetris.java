@@ -5,7 +5,7 @@ import javax.swing.*;
 
 public class Tetris extends JFrame {
     
-    public static Player player = new Player("", 0, 1, 0, 1);
+    public static Player player = new Player("", 100000000, 1, 0, 1);
     private int bgmVolume = 100;
 
     public Tetris() {
