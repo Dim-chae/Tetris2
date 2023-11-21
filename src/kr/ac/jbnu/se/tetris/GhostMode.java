@@ -12,6 +12,6 @@ public class GhostMode extends Board {
     @Override
     protected void drawSquare(Graphics g, int x, int y, Tetrominoes shape) {
         g.setColor(new Color(0, 0, 0, 0));
-        g.drawRect(x, y, squareWidth(), squareHeight());
+        // g.drawRect(x, y, squareWidth(), squareHeight());
     }
 }

@@ -13,13 +13,13 @@ public class AchievementMenu extends JPanel {
 
     public AchievementMenu(Tetris tetris) {
         this.tetris = tetris;
+        checkAchievement();
         initUI();
     }
 
     private void initUI() {
         setLayout(new BorderLayout());
         addTitleLabel();
-        checkAchievement();
         addCenterPanel();
         addScrollPane();
         addBackButton();

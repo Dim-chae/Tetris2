@@ -9,7 +9,7 @@ public class Tetris extends JFrame {
     private int bgmVolume = 100;
 
     public Tetris() {
-        setSize(400, 400);
+        setSize(400, 450);
         setTitle("Tetris");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
