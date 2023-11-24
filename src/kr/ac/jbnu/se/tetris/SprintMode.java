@@ -9,7 +9,7 @@ public class SprintMode extends Board{
     // private float runningTime = 0;
 
     public SprintMode(Tetris tetris){
-        super(tetris, "스프린트 모드");
+        super(tetris, "Sprint");
         // spModeTimer = new Timer(100, e -> checkClear());
         // spModeTimer.start();
     }

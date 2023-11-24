@@ -2,30 +2,43 @@ package kr.ac.jbnu.se.tetris;
 
 import java.awt.*;
 import java.awt.event.*;
-import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.border.*;
+import javax.swing.border.TitledBorder;
 
 public class Board extends JPanel implements ActionListener {
 	protected Tetris tetris;
 
-	protected final static int BoardWidth = 10; //게임 보드의 가로 칸 수
-	protected final static int BoardHeight = 20; //게임 보드의 세로 칸 수
+	protected final static int BOARD_WIDTH = 10;
+	protected final static int BOARD_HEGHT = 20;
 	private final int SQUARE_SIZE = 20;
 
 	private Bgm bgm;
-	private Timer timer; //게임의 속도를 조절하는 타이머
-	private Shape curPiece; //현재 블록을 나타내는 객체
-	private Shape nextPiece; //다음 블록을 나타내는 객체
-	protected Tetrominoes[][] board = new Tetrominoes[BoardWidth][BoardHeight]; //게임 보드를 나타내는 배열 생성
-	protected int numLinesRemoved = 0; //사용자가 제거한 줄의 수를 나타내는 변수
-	protected boolean isFallingFinished = false; //블록이 떨어지는 것이 끝났는지를 나타내는 변수
+	private Timer timer;
+	private Shape curPiece;
+	private Shape nextPiece;
+	private Shape holdPiece = new Shape();
+	private Shape tmpPiece = new Shape();
+	protected Tetrominoes[][] tetrisBoard = new Tetrominoes[BOARD_WIDTH][BOARD_HEGHT];
+	protected int numLinesRemoved = 0;
+	private int itemCount = 3;
+	protected boolean isFallingFinished = false;
 	protected int combo = 0;
 	protected int score = 0;
 	private String modeName = "";
 	protected JLabel scoreLabel = new JLabel("Score : " + score);
 	protected JLabel statusLabel = new JLabel();
 	protected JLabel comboLabel = new JLabel("Combo : " + combo);
+	private boolean isPaused = false;
+	private boolean isUseHold = false;
+	private JPanel rightPanel = new JPanel(new FlowLayout());
+	private JPanel nextPiecePanel = new JPanel();
+	private JPanel holdPiecePanel = new JPanel();
+	private JPanel statusPanel = new JPanel();
+	private JLabel nextPieceLabel = new JLabel();
+	private JLabel holdPieceLabel = new JLabel();
+	private JButton itemButton = new JButton();
+	private ImageIcon itemImage = new ImageIcon("src\\kr\\ac\\jbnu\\se\\tetris\\resources\\itemIcon.png");
+	private Font font = new Font("맑은 고딕", Font.BOLD, 13);
 
 	public Board(Tetris tetris, String modeName) {
 		this.tetris = tetris;
@@ -36,15 +49,18 @@ public class Board extends JPanel implements ActionListener {
 	}
 
 	private void initUI(){
+		statusLabel.setText(modeName + " Mode");
+
 		setLayout(new BorderLayout());
-		setPreferredSize(new Dimension(250, (BoardHeight + 8) * SQUARE_SIZE));
+		setPreferredSize(new Dimension(250, 400));
+		addRightPanel();
 	}
 
 	private void initGame(){
 		clearBoard();
 		addKeyListener(new TAdapter());
 		curPiece = new Shape().setRandomShape();
-		curPiece.setX(BoardWidth / 2);
+		curPiece.setX(BOARD_WIDTH / 2);
 		curPiece.setY(0);
 		nextPiece = new Shape().setRandomShape();
 		timer = new Timer(setTimerDelay(modeName), this);
@@ -54,46 +70,90 @@ public class Board extends JPanel implements ActionListener {
 		isFallingFinished = false;
 	}
 
+	private int setTimerDelay(String modeName) {
+		switch (modeName) {
+			case "Easy":
+			case "Time Attack":
+			case "Sprint":
+			case "Ghost":
+				return 500;
+			case "Normal":
+				return 300;
+			case "Hard":
+				return 200;
+			case "Very Hard":
+				return 80;
+			case "God":
+				return 30;
+			default:
+				return 400;
+		}
+	}
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (isFallingFinished) {
 			isFallingFinished = false;
 			createNewPiece(); 
-
 		} else {
 			oneLineDown();
 		}
         repaint();
 	}
 
-	private boolean tryMove(Shape newPiece, int newX, int newY) { //새로운 위치(newX, newY)로 블록을 이동하려고 시도하는 메소드
-		for (int i = 0; i < 4; ++i) { //새로운 블록의 모든 칸에 대해
-			int x = newX + newPiece.getX(i); //새로운 블록의 x좌표
-			int y = newY + newPiece.getY(i); //새로운 블록의 y좌표
-			if ((x < 0) && (y >= 0 || y <= BoardHeight)) //새로운 위치가 왼쪽 벽을 넘어간다면
-				tryMove(newPiece, newX + 1, newY); //새로운 블록을 오른쪽으로 한 칸 이동
-			if ((x >= BoardWidth) && (y >= 0 || y <= BoardHeight)) //새로운 위치가 오른쪽 벽을 넘어간다면
-				tryMove(newPiece, newX - 1, newY); //새로운 블록을 왼쪽으로 한 칸 이동
-			if (x < 0 || x >= BoardWidth || y < 0 || y >= BoardHeight) //새로운 블록이 게임 보드의 범위를 벗어난다면
-				return false; //false 반환
-			if (board[x][y] != Tetrominoes.NoShape) //새로운 블록이 게임 보드의 다른 블록과 겹친다면 = 새로운 x, y에 블록이 존재한다면
-				return false; //false 반환
-		}
+	private void pause(){
+		if(isPaused) return;
 
-		curPiece = newPiece; //새로운 블록을 현재 블록으로 설정
+		isPaused = true;
+		timer.stop();
+		bgm.stop();
+		statusLabel.setText("Paused");
+		
+		//showPauseScreen();
+	}
+
+	private void resume(){
+		if(!isPaused) return;
+
+		isPaused = false;
+		timer.start();
+		bgm.play();
+		statusLabel.setText(modeName + "Mode");
+	}
+
+	private boolean canMove(Shape newPiece, int newX, int newY){
+		for (int i = 0; i < 4; ++i) {
+			int x = newX + newPiece.getX(i);
+			int y = newY + newPiece.getY(i); 
+			if ((x < 0) && (y >= 0 || y <= BOARD_HEGHT))
+				tryMove(newPiece, newX + 1, newY); 
+			if ((x >= BOARD_WIDTH) && (y >= 0 || y <= BOARD_HEGHT)) 
+				tryMove(newPiece, newX - 1, newY); 
+			if (x < 0 || x >= BOARD_WIDTH || y < 0 || y >= BOARD_HEGHT) 
+				return false;
+			if (tetrisBoard[x][y] != Tetrominoes.NoShape)
+				return false;
+		}
+		return true; 
+	}
+
+	private boolean tryMove(Shape newPiece, int newX, int newY) {
+		if(!canMove(newPiece, newX, newY)) return false;
+
+		curPiece = newPiece; 
 		curPiece.setX(newX);
 		curPiece.setY(newY);
-		repaint(); //게임 보드를 다시 그림
-		return true; //true 반환
+		repaint();
+		return true;
 	}
 
 	private void createNewPiece() {
 		curPiece = nextPiece;
 		nextPiece = new Shape().setRandomShape();
-		curPiece.setX(BoardWidth / 2);
+		curPiece.setX(BOARD_WIDTH / 2);
 		curPiece.setY(-curPiece.getMinY());
+		isUseHold = false;
 
-		System.out.println(curPiece.getShape() + " " + curPiece.getMinY());
 		if(!tryMove(curPiece, curPiece.getX(), curPiece.getY())) {
 			gameOver();
 		}
@@ -104,22 +164,24 @@ public class Board extends JPanel implements ActionListener {
 		bgm.stop();
 		statusLabel.setText("Game Over");
 		System.out.println("Game Over");
+		calcGameExp();
 	}
 	
 	public void hardDrop() {
 		int newY = curPiece.getY();
-		while (newY < BoardHeight - 1) {
+		while (newY < BOARD_HEGHT - 1) {
 			if (!tryMove(curPiece, curPiece.getX(), newY + 1)) {
 				break;
 			}
 			++newY;
 		}
 		putPieceOnBoard();
+		repaint();
 	}
 
 	private void oneLineDown() {
-		if (!tryMove(curPiece, curPiece.getX(), curPiece.getY() + 1)) { //현재 블록을 한 칸 아래로 이동할 수 없다면
-			putPieceOnBoard(); //현재 블록을 게임 보드에 놓음
+		if (!tryMove(curPiece, curPiece.getX(), curPiece.getY() + 1)) {
+			putPieceOnBoard();
 		}
 	}
 
@@ -128,7 +190,7 @@ public class Board extends JPanel implements ActionListener {
 		for (int i = 0; i < 4; i++) {
 			int x = curPiece.getX() + pieceCoords[i][0];
 			int y = curPiece.getY() + pieceCoords[i][1];
-			board[x][y] = curPiece.getShape();
+			tetrisBoard[x][y] = curPiece.getShape();
 		}
 	
 		removeFullLines();
@@ -142,10 +204,10 @@ public class Board extends JPanel implements ActionListener {
 		int numFullLines = 0;
 		int comboScore = 0;
 
-		for(int i = BoardHeight - 1; i >= 0; i--) {
+		for(int i = BOARD_HEGHT - 1; i >= 0; i--) {
 			boolean lineIsFull = true;
-			for(int j = 0; j < BoardWidth; j++) {
-				if(board[j][i] == Tetrominoes.NoShape) {
+			for(int j = 0; j < BOARD_WIDTH; j++) {
+				if(tetrisBoard[j][i] == Tetrominoes.NoShape) {
 					lineIsFull = false;
 					break;
 				}
@@ -153,12 +215,12 @@ public class Board extends JPanel implements ActionListener {
 			if(lineIsFull) {
 				numFullLines++;
 				for(int k = i; k > 0; k--) {
-					for(int j = 0; j < BoardWidth; j++) {
-						board[j][k] = board[j][k - 1];
+					for(int j = 0; j < BOARD_WIDTH; j++) {
+						tetrisBoard[j][k] = tetrisBoard[j][k - 1];
 					}
 				}
-				for(int j = 0; j < BoardWidth; j++) {
-					board[j][0] = Tetrominoes.NoShape;
+				for(int j = 0; j < BOARD_WIDTH; j++) {
+					tetrisBoard[j][0] = Tetrominoes.NoShape;
 				}
 				i++;
 			}
@@ -180,10 +242,30 @@ public class Board extends JPanel implements ActionListener {
 		score += 100 * numFullLines + comboScore;
 	}
 
-	public void clearBoard(){
-		for(int i = 0; i < BoardWidth; i++){
-			for(int j = 0; j < BoardHeight; j++){
-				board[i][j] = Tetrominoes.NoShape;
+	private void holdCurPiece(){
+		if(isUseHold) return;
+
+		if(holdPiece.getShape() == Tetrominoes.NoShape){
+			holdPiece = curPiece;
+			createNewPiece();
+		} else {
+			int x = curPiece.getX();
+			int y = curPiece.getY();
+			tmpPiece = curPiece;
+			curPiece = holdPiece;
+			holdPiece = tmpPiece;
+			curPiece.setX(x);
+			curPiece.setY(y);
+		}
+
+		isUseHold = true;
+		repaint();
+	}
+
+	private void clearBoard(){
+		for(int i = 0; i < BOARD_WIDTH; i++){
+			for(int j = 0; j < BOARD_HEGHT; j++){
+				tetrisBoard[i][j] = Tetrominoes.NoShape;
 			}
 		}
 	}
@@ -193,8 +275,10 @@ public class Board extends JPanel implements ActionListener {
         super.paint(g);
 		drawBackgroudImage(g);
 		drawGridPattern(g);
-		drawBoard(g);
+		drawGhost(g);
         drawPiece(g);
+		drawBoard(g);
+		updateScorePanel();
     }
 
     private void drawPiece(Graphics g){
@@ -209,24 +293,42 @@ public class Board extends JPanel implements ActionListener {
     }
 
 	private void drawBoard(Graphics g){
-        for(int i = 0; i < BoardWidth; i++){
-            for(int j = 0; j < BoardHeight; j++){
-                drawSquare(g, i * SQUARE_SIZE, j * SQUARE_SIZE, board[i][j]);
+        for(int i = 0; i < BOARD_WIDTH; i++){
+            for(int j = 0; j < BOARD_HEGHT; j++){
+                drawSquare(g, i * SQUARE_SIZE, j * SQUARE_SIZE, tetrisBoard[i][j]);
             }
         }
     }
 
-	private void drawGridPattern(Graphics g){
-		g.setColor(Color.WHITE);
-		for(int i = 0; i <= BoardWidth; i++){
-			g.drawLine(i * SQUARE_SIZE, 0, i * SQUARE_SIZE, BoardHeight * SQUARE_SIZE);
+	private void drawGhost(Graphics g){
+		int curX = curPiece.getX();
+		int curY = curPiece.getY();
+		int newY = curY;
+		g.setColor(Color.GRAY);
+		while (newY < BOARD_HEGHT - 1) {
+			if (!canMove(curPiece, curX, newY + 1)) {
+				break;
+			}
+			++newY;
 		}
-		for(int i = 0; i <= BoardHeight; i++){
-			g.drawLine(0, i * SQUARE_SIZE, BoardWidth * SQUARE_SIZE, i * SQUARE_SIZE);
+		for(int i = 0; i < 4; ++i){
+			int x = curX + curPiece.getCoords()[i][0];
+			int y = newY + curPiece.getCoords()[i][1];
+			g.fillRect(x * SQUARE_SIZE, y * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE);
 		}
 	}
 
-    protected void drawSquare(Graphics g, int x, int y, Tetrominoes shape) { //x, y는 블록 왼쪽 상단의 좌표, shape는 블록의 모양
+	private void drawGridPattern(Graphics g){
+		g.setColor(Color.WHITE);
+		for(int i = 0; i <= BOARD_WIDTH; i++){
+			g.drawLine(i * SQUARE_SIZE, 0, i * SQUARE_SIZE, BOARD_HEGHT * SQUARE_SIZE);
+		}
+		for(int i = 0; i <= BOARD_HEGHT; i++){
+			g.drawLine(0, i * SQUARE_SIZE, BOARD_WIDTH * SQUARE_SIZE, i * SQUARE_SIZE);
+		}
+	}
+
+    protected void drawSquare(Graphics g, int x, int y, Tetrominoes shape) {
 		Color color = shape.getShape().getColor();
 		
 		g.setColor(color);
@@ -237,85 +339,135 @@ public class Board extends JPanel implements ActionListener {
 		g.drawLine(x, y, x + SQUARE_SIZE -1, y);
 
 		g.setColor(color.darker());
-		g.drawLine(x + 1, y + SQUARE_SIZE - 1, x + SQUARE_SIZE - 1, y + SQUARE_SIZE - 1); //블록의 아래쪽에 어두운 선을 그림(그림자)
-		g.drawLine(x + SQUARE_SIZE - 1, y + SQUARE_SIZE - 1, x + SQUARE_SIZE - 1, y + 1); //블록의 오른쪽에 어두운 선을 그림
+		g.drawLine(x + 1, y + SQUARE_SIZE - 1, x + SQUARE_SIZE - 1, y + SQUARE_SIZE - 1);
+		g.drawLine(x + SQUARE_SIZE - 1, y + SQUARE_SIZE - 1, x + SQUARE_SIZE - 1, y + 1);
 	}
 
 	private void drawBackgroudImage(Graphics g){
 		ImageIcon backGroundImage = new ImageIcon("src\\kr\\ac\\jbnu\\se\\tetris\\resources\\backGround.jpg");
 		g.drawImage(backGroundImage.getImage(), 0, 0, null);
-		g.setColor(new Color(255, 255, 255, 50));
-		g.fillRect(0, 0, BoardWidth * SQUARE_SIZE, BoardHeight * SQUARE_SIZE);
 	}
 
+	private void calcGameExp(){
+		int gameEXP = this.score / 10;
+		tetris.addUserExp(gameEXP);
+	}
 
-	private int setTimerDelay(String modeName) {
-		switch (modeName) {
-			case "Easy":
-			case "스프린트 모드":
-			case "타임어택 모드":
-			case "그림자 모드":
-				return 500;
-			case "Normal":
-				return 300;
-			case "Hard":
-				return 200;
-			case "Very Hard":
-				return 80;
-			case "God":
-				return 30;
-			default:
-				return 400;
+	private void addRightPanel(){
+		rightPanel.setPreferredSize(new Dimension(190, 400));
+		add(rightPanel, BorderLayout.EAST);
+		addNextPiecePanel();
+		addHoldPiecePanel();
+		addStatusPanel();
+		addItemButton();
+	}
+
+	private void addNextPiecePanel(){
+		nextPiecePanel.setPreferredSize(new Dimension(100, 100));
+		nextPiecePanel.setBorder(BorderFactory.createTitledBorder(null, "Next Piece", TitledBorder.CENTER, TitledBorder.TOP, font, new Color(70, 130, 180)));
+		nextPiecePanel.add(nextPieceLabel);
+		rightPanel.add(nextPiecePanel);
+	}
+
+	private void addHoldPiecePanel(){
+		holdPiecePanel.setPreferredSize(new Dimension(100, 100));
+		holdPiecePanel.setBorder(BorderFactory.createTitledBorder(null, "Hold Piece", TitledBorder.CENTER, TitledBorder.TOP, font, new Color(70, 130, 180)));
+		holdPiecePanel.add(holdPieceLabel);
+		rightPanel.add(holdPiecePanel);
+	}
+
+	private void addStatusPanel(){
+		statusPanel.setPreferredSize(new Dimension(100, 100));
+		statusPanel.setBorder(BorderFactory.createTitledBorder(null, "Status", TitledBorder.CENTER, TitledBorder.TOP, font, new Color(70, 130, 180)));
+		statusPanel.add(statusLabel);
+		statusPanel.add(scoreLabel);
+		statusPanel.add(comboLabel);
+		rightPanel.add(statusPanel);
+	}
+
+	private void addItemButton(){
+		itemButton.setPreferredSize(new Dimension(100, 50));
+		itemButton.setIcon(itemImage);
+		// itemButton.setBackground(new Color(30, 144, 255)); // 파란색 계열
+		itemButton.setBackground(new Color(173, 216, 230));
+		// itemButton.setBorder(BorderFactory.createLineBorder(new Color(70, 130, 180), 2));
+		itemButton.addActionListener(e -> useItem());
+		rightPanel.add(itemButton);
+	}
+
+	private void useItem(){
+		int blockCount = 0;
+		for(int i = 0; i < BOARD_WIDTH; i++){
+			for(int j = 0; j < BOARD_HEGHT; j++){
+				if(tetrisBoard[i][j] != Tetrominoes.NoShape){
+					blockCount++;
+				}
+			}
+		}
+		score += blockCount * 10;
+		itemCount--;
+		clearBoard();
+		requestFocusInWindow();
+
+		if(itemCount == 0 ){
+			itemButton.setVisible(false);
+			return;
 		}
 	}
 
 	protected void updateScorePanel() {
 		scoreLabel.setText("Score : " + score);
 		comboLabel.setText("Combo : " + combo);
+		itemButton.setText(String.valueOf(itemCount));
+		nextPieceLabel.setIcon(nextPiece.getImage());
+		holdPieceLabel.setIcon(holdPiece.getImage());
+		repaint();
 	}
 
+
 	private class TAdapter extends KeyAdapter {
+		@Override
 		public void keyPressed(KeyEvent e) {
 			int keycode = e.getKeyCode();
 
-			// if (keycode == KeyEvent.VK_ESCAPE) {
-			// 	if (isPaused) {
-			// 		return;
-			// 	}
-			// 	pause();
-			// 	return;
-			// }
+			if(isPaused) {
+				if (keycode == KeyEvent.VK_ESCAPE) {
+					resume();
+				}
+				return;
+			}
+
+			if (keycode == KeyEvent.VK_ESCAPE) {
+				if (!isPaused) {
+					pause();
+				}
+			}
 
 			switch (keycode) {
 				case KeyEvent.VK_LEFT:
                 tryMove(curPiece, curPiece.getX() - 1, curPiece.getY());
-                break; // 왼쪽으로 이동 (왼쪽 화살표)
+                break;
             case KeyEvent.VK_RIGHT:
                 tryMove(curPiece, curPiece.getX() + 1, curPiece.getY());
-                break; // 오른쪽으로 이동 (오른쪽 화살표)
+                break;
             case KeyEvent.VK_DOWN:
-                if (tryMove(curPiece, curPiece.getX(), curPiece.getY() + 1)) {
-                    // curPiece.moveDown();
-                }
-                repaint();
-                break; // 아래쪽으로 이동 (아래쪽 화살표)
+                tryMove(curPiece, curPiece.getX(), curPiece.getY() + 1);
+                break;
             case KeyEvent.VK_UP:
                 tryMove(curPiece.rotateRight(), curPiece.getX(), curPiece.getY());
-                repaint();
-                break; // 반시계 방향 회전 (위쪽 화살표)
+                break;
             case KeyEvent.VK_SPACE:
                 hardDrop();
-                repaint();
-                break; // 하드 드롭 (Space)
+                break;
             case 'c':
             case 'C':
-                // holdCurPiece(); // 홀드 기능 (c)
+				holdCurPiece();
                 break;
-				// case 'i':
-				// case 'I':
-				// 	item.useItem();
-				// 	if(tetris.getUserItemReserves() == 0) itemReservesButton.setVisible(false);
-				// 	break; // 아이템 사용 (I)
+				case 'i':
+				case 'I':
+					useItem();
+					break; // 아이템 사용 (I)
+			default:
 			}
 		}
 	}

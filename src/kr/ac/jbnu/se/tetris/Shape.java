@@ -106,6 +106,8 @@ public class Shape {
 
 		Shape result = new Shape();
 		result.pieceShape = pieceShape;
+		result.color = color;
+		result.image = image;
 
 		for (int i = 0; i < 4; ++i) {
 			result.coords[i][0] = -coords[i][1];

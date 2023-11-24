@@ -6,7 +6,7 @@ import java.awt.Graphics;
 public class GhostMode extends Board {
 
     public GhostMode(Tetris tetris) {
-        super(tetris, "고스트 모드");
+        super(tetris, "Ghost");
     }
 
     @Override

@@ -8,7 +8,7 @@ public class TimeAttackMode extends Board{
     // private final Timer taModeTimer;
 
     public TimeAttackMode(Tetris tetris) {
-        super(tetris, "타임어택 모드");
+        super(tetris, "Time Attack");
         // taModeTimer = new Timer(100, e -> checkTimeOver());
         // taModeTimer.start();
     }
