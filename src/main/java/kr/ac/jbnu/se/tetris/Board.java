@@ -13,13 +13,13 @@ public class Board extends JPanel implements ActionListener {
 
 	protected final int BoardWidth = 10; //게임 보드의 가로 칸 수
 	protected final int BoardHeight = 22; //게임 보드의 세로 칸 수
-	private final ImageIcon lineShapeIamge = new ImageIcon("src/kr/ac/jbnu/se/tetris/resources/LineShape.png");
-	private final ImageIcon squareShapeIamge = new ImageIcon("src/kr/ac/jbnu/se/tetris/resources/SquareShape.png");
-	private final ImageIcon tShapeIamge = new ImageIcon("src/kr/ac/jbnu/se/tetris/resources/TShape.png");
-	private final ImageIcon lShapeIamge = new ImageIcon("src/kr/ac/jbnu/se/tetris/resources/LShape.png");
-	private final ImageIcon mirroredLShapeIamge = new ImageIcon("src/kr/ac/jbnu/se/tetris/resources/MirroredLShape.png");
-	private final ImageIcon zShapeIamge = new ImageIcon("src/kr/ac/jbnu/se/tetris/resources/ZShape.png");
-	private final ImageIcon sShapeIamge = new ImageIcon("src/kr/ac/jbnu/se/tetris/resources/SShape.png");
+	private final ImageIcon lineShapeIamge = new ImageIcon("src/main/resources/LineShape.png");
+	private final ImageIcon squareShapeIamge = new ImageIcon("src/main/resources/SquareShape.png");
+	private final ImageIcon tShapeIamge = new ImageIcon("src/main/resources/TShape.png");
+	private final ImageIcon lShapeIamge = new ImageIcon("src/main/resources/LShape.png");
+	private final ImageIcon mirroredLShapeIamge = new ImageIcon("src/main/resources/MirroredLShape.png");
+	private final ImageIcon zShapeIamge = new ImageIcon("src/main/resources/ZShape.png");
+	private final ImageIcon sShapeIamge = new ImageIcon("src/main/resources/SShape.png");
 
 	private Timer timer; //게임의 속도를 조절하는 타이머
 	private Timer linetimer; //줄 생성 속도를 조절하는 타이머
@@ -107,7 +107,7 @@ public class Board extends JPanel implements ActionListener {
 		itemReservesButton.setPreferredSize(new Dimension(100, 30));
     
 		try {
-			Image img = ImageIO.read(getClass().getResource("resources/itemIcon.png"));
+			Image img = ImageIO.read(getClass().getResource("/itemIcon.png"));
 			itemReservesButton.setIcon(new ImageIcon(img));
 		} catch (Exception ex) {
 			System.out.println(ex);
@@ -509,7 +509,7 @@ public class Board extends JPanel implements ActionListener {
 	}
 
 	private void addBkgImg(Graphics g) {
-		ImageIcon bkgImg = new ImageIcon("src/kr/ac/jbnu/se/tetris/resources/backGround.jpg");
+		ImageIcon bkgImg = new ImageIcon("src/main/resources/backGround.jpg");
 		Image bkgImg1 = bkgImg.getImage();
 		g.drawImage(bkgImg1, 0, 0, getWidth() / 2, getHeight(), this);
 	}
