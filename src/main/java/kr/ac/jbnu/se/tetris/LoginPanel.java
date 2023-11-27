@@ -1,4 +1,4 @@
-package main.java.kr.ac.jbnu.se.tetris;
+package kr.ac.jbnu.se.tetris;
 
 import javax.swing.*;
 import java.awt.*;

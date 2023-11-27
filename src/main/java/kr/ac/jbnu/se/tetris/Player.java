@@ -1,4 +1,4 @@
-package main.java.kr.ac.jbnu.se.tetris;
+package kr.ac.jbnu.se.tetris;
 
 //현재 플레이어의 정보를 저장하는 클래스
 public class Player {

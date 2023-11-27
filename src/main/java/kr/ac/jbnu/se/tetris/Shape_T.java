@@ -1,4 +1,4 @@
-package main.java.kr.ac.jbnu.se.tetris;
+package kr.ac.jbnu.se.tetris;
 
 import java.awt.Color;
 import javax.swing.ImageIcon;
@@ -9,6 +9,6 @@ public class Shape_T extends Shape{
         coords = new int[][]{ { -1, 0 }, { 0, 0 }, { 1, 0 }, { 0, 1 } };
         pieceShape = Tetrominoes.TShape;
         color = new Color(204, 204, 102);
-        image = new ImageIcon("src/kr/ac/jbnu/se/tetris/resources/TShape.png");
+        image = new ImageIcon("src\\main\\resources\\TShape.png");
     }
 }
