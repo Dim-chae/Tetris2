@@ -1,49 +1,15 @@
 package kr.ac.jbnu.se.tetris;
 
 public enum Tetrominoes {
-	NoShape, ZShape, SShape, LineShape, TShape, SquareShape, LShape, MirroredLShape, OneBlockShape
+	NoShape { Shape getShape() { return new Shape_No(); } },
+	OneBlockShape { Shape getShape() { return new Shape_OneBlock(); } },
+	ZShape { Shape getShape() { return new Shape_Z(); } },
+    SShape { Shape getShape() { return new Shape_S(); } },
+    LineShape { Shape getShape() { return new Shape_Line(); } },
+    TShape { Shape getShape() { return new Shape_T(); } },
+    SquareShape { Shape getShape() { return new Shape_Square(); } },
+    LShape { Shape getShape() { return new Shape_L(); } },
+    MirroredLShape { Shape getShape() { return new Shape_MirroredL(); } };
+
+    abstract Shape getShape();
 }
-
-//테트리스 블록(테트로미노)의 모양을 정의한 클래스
-/*
-NoShape
-[ ][ ][ ][ ]
-[ ][ ][ ][ ]
-
-
-ZShape
-[ ][ ][X][X]
-[ ][X][X][ ]
-
-
-SShape
-[ ][X][X][ ]
-[ ][ ][X][X]
-
-LineShape
-[ ][ ][ ][ ]
-[X][X][X][X]
-
-
-TShape
-[ ][X][X][X]
-[ ][ ][X][ ]
-
-SquareShape
-[ ][X][X][ ]
-[ ][X][X][ ]
-
-LShape
-[ ][X][X][X]
-[ ][X][ ][ ]
-
-MirroredLShape (반전된 L 모양)
-[ ][X][X][X]
-[ ][ ][ ][X]
-
-OneBlockShape
-[ ][ ][ ][ ]
-[ ][ ][X][ ]
-
-
- */

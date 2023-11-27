@@ -43,3 +43,20 @@ build/resources/main/SquareShape.png
 build/resources/main/SShape.png
 build/resources/main/TShape.png
 build/resources/main/ZShape.png
+
+
+# Created by https://www.toptal.com/developers/gitignore/api/gradle
+# Edit at https://www.toptal.com/developers/gitignore?templates=gradle
+
+# vscode
+.vscode
+bin
+.idea
+out
+build.gradle
+.gitignore
+gradlew.bat
+gradlew
+settings.gradle
+Tetris2.iml
+gradle

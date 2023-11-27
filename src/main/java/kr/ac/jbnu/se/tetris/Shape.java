@@ -1,37 +1,49 @@
 package kr.ac.jbnu.se.tetris;
 
+import java.awt.Color;
 import java.util.Random;
+import javax.swing.ImageIcon;
 
 public class Shape {
-	private Tetrominoes pieceShape;
-	private int coords[][];
-	private int[][][] coordsTable;
+    protected int[][] coords;
+    protected Tetrominoes pieceShape;
+    protected Color color;
+    protected ImageIcon image;    
 
-	public Shape() { 
-		coords = new int[4][2];
-		setShape(Tetrominoes.NoShape);
+	private int x;
+	private int y;
+
+    public Shape(){
+        x = 0;
+        y = 0;
+        setShape(Tetrominoes.NoShape);
+		coords = new int[][]{{0, 0}, {0, 0}, {0, 0}, {0, 0}};
+    }
+
+    public Tetrominoes getShape(){
+        return pieceShape;
+    }
+
+    public void setShape(Tetrominoes shape){
+        pieceShape = shape;
+    }
+
+	public Shape setRandomShape(){
+        Random r = new Random();
+        int ran = Math.abs(r.nextInt()) % (Tetrominoes.values().length-2) + 2;
+        return Tetrominoes.values()[ran].getShape();
+    }
+	
+	public int[][] getCoords(){
+		return coords;
 	}
-	public void setShape(Tetrominoes shape) { 
-		coordsTable = new int[][][] { { { 0, 0 }, { 0, 0 }, { 0, 0 }, { 0, 0 } },
-			{ { 0, -1 }, { 0, 0 }, { -1, 0 }, { -1, 1 } }, { { 0, -1 }, { 0, 0 }, { 1, 0 }, { 1, 1 } },
-			{ { 0, -1 }, { 0, 0 }, { 0, 1 }, { 0, 2 } }, { { -1, 0 }, { 0, 0 }, { 1, 0 }, { 0, 1 } },
-			{ { 0, 0 }, { 1, 0 }, { 0, 1 }, { 1, 1 } }, { { -1, -1 }, { 0, -1 }, { 0, 0 }, { 0, 1 } },
-			{ { 1, -1 }, { 0, -1 }, { 0, 0 }, { 0, 1 } }, { { 0, 0 }, { 0, 0 }, { 0, 0 }, { 0, 0 } }};
 
-		for (int i = 0; i < 4; i++) { 
-			for (int j = 0; j < 2; ++j) {
-				coords[i][j] = coordsTable[shape.ordinal()][i][j]; 
-			}
-		}
-		pieceShape = shape; 
+	public int getX() {
+		return x;
 	}
 
-	private void setX(int index, int x) {
-		coords[index][0] = x;
-	}
-
-	private void setY(int index, int y) {
-		coords[index][1] = y;
+	public int getY() {
+		return y;
 	}
 
 	public int getX(int index) {
@@ -42,48 +54,50 @@ public class Shape {
 		return coords[index][1];
 	}
 
-	public Tetrominoes getShape() {
-		return pieceShape;
+	public int getMinY(){
+		int m = coords[0][1];
+		for(int i = 0; i < coords.length; i++){
+			m = Math.min(m, coords[i][1]);
+		}
+		return m;
+	}
+
+	public void setX(int x){
+		this.x = x;
+	}
+
+	public void setY(int y){
+		this.y = y;
 	}
 
 	public String getShapeToString(){
 		return pieceShape.toString();
 	}
 
-	public String setRanShape(){
-		Random r = new Random();
-		int x = Math.abs(r.nextInt()) % 7 + 1;
-		Tetrominoes[] values = Tetrominoes.values();
-		return values[x].toString();
-	}
-		
-	public int minX() {
-		int m = coords[0][0];
-		for (int i = 0; i < 4; i++) {
-			m = Math.min(m, coords[i][0]);
-		}
-		return m;
+	public Color getColor(){
+        return color;
+    }
+
+    public ImageIcon getImage(){
+        return image;
+    }
+
+	public void moveDown(){
+		for(int i = 0; i < coords.length; i++){
+            coords[i][1]++;
+        }
 	}
 
-	public int minY() {
-		int m = coords[0][1];
-		for (int i = 0; i < 4; i++) {
-			m = Math.min(m, coords[i][1]);
+	public void moveLeft(){
+		for(int i = 0; i < coords.length; i++){
+			coords[i][0]--;
 		}
-		return m;
 	}
 
-	public Shape rotateLeft() {
-		if (pieceShape == Tetrominoes.SquareShape) 
-			return this;
-		Shape result = new Shape();
-		result.pieceShape = pieceShape;
-	
-		for (int i = 0; i < 4; ++i) {
-			result.setX(i, getY(i)); 
-			result.setY(i, -getX(i));
+	public void moveRight(){
+		for(int i = 0; i < coords.length; i++){
+			coords[i][0]++;
 		}
-		return result;
 	}
 
 	public Shape rotateRight() {
@@ -92,10 +106,12 @@ public class Shape {
 
 		Shape result = new Shape();
 		result.pieceShape = pieceShape;
+		result.color = color;
+		result.image = image;
 
 		for (int i = 0; i < 4; ++i) {
-			result.setX(i, -getY(i));
-			result.setY(i, getX(i));
+			result.coords[i][0] = -coords[i][1];
+			result.coords[i][1] = coords[i][0];
 		}
 		return result;
 	}

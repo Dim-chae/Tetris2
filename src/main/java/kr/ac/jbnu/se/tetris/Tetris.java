@@ -5,16 +5,17 @@ import javax.swing.*;
 
 public class Tetris extends JFrame {
     
-    public static Player player = new Player("", 0, 1, 0, 1);
+    public static Player player = new Player("", 100000000, 1, 0, 1);
     private int bgmVolume = 100;
 
     public Tetris() {
-        setSize(400, 400);
+        setSize(400, 450);
         setTitle("Tetris");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setVisible(false);
         setLayout(new BorderLayout());
-        add(new Login(this));
+        setLocationRelativeTo(null);
+        setResizable(false);
+        add(new MainMenu(this));
     }
 
     public void setUserId(String userId) {
@@ -70,10 +71,7 @@ public class Tetris extends JFrame {
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            Tetris tetris = new Tetris();
-            tetris.setLocationRelativeTo(null);
-            tetris.setVisible(true);
-        });
+        Tetris tetris = new Tetris();
+        tetris.setVisible(true);
     }
 }

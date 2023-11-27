@@ -6,13 +6,13 @@ import java.io.IOException;
 
 public class Bgm {
     private Clip audioClip;
-    private String audioFilePath = "src/main/resources/bgm.wav";
+    private final String AUDIO_FILE_PATH = "src\\main\\resources\\bgm.wav";
     private FloatControl volumeControl; // 볼륨 조절 컨트롤
 
     public Bgm() {
         try {
             // 오디오 파일을 로드합니다.
-            File audioFile = new File(audioFilePath);
+            File audioFile = new File(AUDIO_FILE_PATH);
             AudioInputStream audioStream = AudioSystem.getAudioInputStream(audioFile);
 
             // 오디오 포맷을 얻어옵니다.

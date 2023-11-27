@@ -3,26 +3,24 @@ package kr.ac.jbnu.se.tetris;
 import javax.swing.*;
 
 public class TimeAttackMode extends Board{
-    private final float TIME_LIMIT = 120.0f;
+    private static final float TIME_LIMIT = 4.0f;
     private float remainingTime = TIME_LIMIT;
-    private Timer taModeTimer;
+    private final Timer taModeTimer;
 
     public TimeAttackMode(Tetris tetris) {
-        super(tetris, "타임어택 모드");
+        super(tetris, "Time Attack");
         taModeTimer = new Timer(100, e -> checkTimeOver());
         taModeTimer.start();
     }
 
-    // 시간이 초과되었는지 확인하는 메소드
     public void checkTimeOver() {
-        if(isPaused)
-            return;
+        if(isPaused) return;
         
         if(remainingTime <= 0) {
-            stopGame();
+            gameOver();
             taModeTimer.stop();
             JOptionPane.showMessageDialog(null, numLinesRemoved + "줄 제거!", "Time Over!", JOptionPane.INFORMATION_MESSAGE, null);
-            gameOverScreen();
+            
         }
         else {
             remainingTime -= 0.1f;
@@ -30,22 +28,13 @@ public class TimeAttackMode extends Board{
         }
     }
 
-    // 제거한 줄을 출력하는 메소드
     @Override
     protected void updateScorePanel() {
-		scoreLabel.setText("제거한 줄 : " + numLinesRemoved);
-		comboLabel.setText("Combo : " + combo);
-        nextPieceLabel.setIcon(getNextPieceImage());
-        holdBlockLabel.setIcon(getHoldBolckImage());
-	}
-
-    @Override
-	protected void backButtonListener() {
-		stopGame();
-        taModeTimer.stop();
-		removePauseScreen();
-		calcGameExp();
-		tetris.setUserLevel();
-		tetris.switchPanel(new MainMenu(tetris));
-	}
+        scoreLabel.setText("제거한 줄 : " + numLinesRemoved);
+        comboLabel.setText("남은 시간 : " + (int)remainingTime + "초");
+        itemButton.setText(String.valueOf(itemCount));
+		nextPieceLabel.setIcon(nextPiece.getImage());
+		holdPieceLabel.setIcon(holdPiece.getImage());
+		repaint();
+    }
 }
