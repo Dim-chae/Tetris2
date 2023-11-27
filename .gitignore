@@ -50,13 +50,7 @@ build/resources/main/ZShape.png
 
 # vscode
 .vscode
-bin
-.idea
+lib
 out
-build.gradle
-.gitignore
-gradlew.bat
-gradlew
-settings.gradle
+bin
 Tetris2.iml
-gradle

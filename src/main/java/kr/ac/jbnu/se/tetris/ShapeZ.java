@@ -3,8 +3,8 @@ package kr.ac.jbnu.se.tetris;
 import java.awt.Color;
 import javax.swing.ImageIcon;
 
-public class Shape_Z extends Shape {
-    public Shape_Z() {
+public class ShapeZ extends Shape {
+    public ShapeZ() {
         super();
         coords = new int[][]{ { 0, -1 }, { 0, 0 }, { -1, 0 }, { -1, 1 } };
         pieceShape = Tetrominoes.ZShape;
