@@ -3,8 +3,8 @@ package kr.ac.jbnu.se.tetris;
 import java.awt.Color;
 import javax.swing.ImageIcon;
 
-public class Shape_MirroredL extends Shape {
-    public Shape_MirroredL() {
+public class ShapeMirroredL extends Shape {
+    public ShapeMirroredL() {
         super();
         coords = new int[][]{ { 1, -1 }, { 0, -1 }, { 0, 0 }, { 0, 1 } };
         pieceShape = Tetrominoes.MirroredLShape;

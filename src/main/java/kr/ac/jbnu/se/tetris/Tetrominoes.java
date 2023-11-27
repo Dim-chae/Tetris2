@@ -1,15 +1,17 @@
 package kr.ac.jbnu.se.tetris;
 
 public enum Tetrominoes {
-	NoShape { Shape getShape() { return new Shape_No(); } },
-	OneBlockShape { Shape getShape() { return new Shape_OneBlock(); } },
-	ZShape { Shape getShape() { return new Shape_Z(); } },
-    SShape { Shape getShape() { return new Shape_S(); } },
-    LineShape { Shape getShape() { return new Shape_Line(); } },
-    TShape { Shape getShape() { return new Shape_T(); } },
-    SquareShape { Shape getShape() { return new Shape_Square(); } },
-    LShape { Shape getShape() { return new Shape_L(); } },
-    MirroredLShape { Shape getShape() { return new Shape_MirroredL(); } };
+	NoShape { Shape getShape() { return new ShapeNo(); } },
+	OneBlockShape { Shape getShape() { return new ShapeOneBlock(); } },
+	ZShape { Shape getShape() { return new ShapeZ(); } },
+    SShape { Shape getShape() { return new ShapeS(); } },
+    LineShape { Shape getShape() { return new ShapeLine(); } },
+    TShape { Shape getShape() { return new ShapeT(); } },
+    SquareShape { Shape getShape() { return new ShapeSquare(); } },
+    LShape { Shape getShape() { return new ShapeL(); } },
+    MirroredLShape { Shape getShape() { return new ShapeMirroredL(); } },
+    TrioLineShape { Shape getShape() { return new ShapeTrioLine(); } },
+    ScytheShape { Shape getShape() { return new ShapeScythe(); } };
 
     abstract Shape getShape();
 }

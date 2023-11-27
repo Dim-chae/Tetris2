@@ -327,7 +327,7 @@ public class Board extends JPanel implements ActionListener {
     @Override
     public void paint(Graphics g){
         super.paint(g);
-		drawBackgroudImage(g);
+		// drawBackgroudImage(g);
 		drawGridPattern(g);
 		drawGhost(g);
         drawPiece(g);
