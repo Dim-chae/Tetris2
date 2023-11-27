@@ -9,6 +9,7 @@ import java.nio.charset.StandardCharsets;
 
 public class LoginPanel extends JPanel {
     private final Tetris tetris;
+    private final JPanel loginPanel = new JPanel();
     private final JLabel loginId = new JLabel("ID : ");
     private final JLabel loginPw = new JLabel("Password : ");
     private final JButton loginButton = new JButton("Login");
@@ -22,15 +23,15 @@ public class LoginPanel extends JPanel {
     }
 
     private void initUI(){
-        setPreferredSize(new Dimension(300, 300));
-        setLayout(new GridLayout(3, 2, 10, 10));
-        setBorder(BorderFactory.createTitledBorder("로그인"));
-        add(loginId);
-        add(loginIdField);
-        add(loginPw);
-        add(loginPwField);
-        add(setStyledButton(loginButton));
-        add(setStyledButton(signUpButton));
+        loginPanel.setLayout(new GridLayout(3, 2, 10, 10));
+        loginPanel.setBorder(BorderFactory.createTitledBorder("로그인"));
+        loginPanel.add(loginId);
+        loginPanel.add(loginIdField);
+        loginPanel.add(loginPw);
+        loginPanel.add(loginPwField);
+        loginPanel.add(setStyledButton(loginButton));
+        loginPanel.add(setStyledButton(signUpButton));
+        add(loginPanel);
 
         loginButton.addActionListener(e -> login());
         signUpButton.addActionListener(e -> showSignUpPanel());
@@ -57,14 +58,7 @@ public class LoginPanel extends JPanel {
 
     // 회원가입 패널 표시
     private void showSignUpPanel() {
-        clearFields();
         tetris.switchPanel(new SignUpPanel(tetris));
-    }
-
-    // id, pw, confirmPw 필드 초기화
-    private void clearFields() {
-        loginIdField.setText("");
-        loginPwField.setText("");
     }
 
     // 서버에서 로그인 확인

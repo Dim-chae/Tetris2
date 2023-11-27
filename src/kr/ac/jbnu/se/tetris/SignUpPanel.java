@@ -14,6 +14,7 @@ public class SignUpPanel extends JPanel{
     private final JTextField signUpIdField = new JTextField(12);
     private final JPasswordField signUpPwField = new JPasswordField(12);
     private final JPasswordField signUpConfirmPwField = new JPasswordField(12);
+    private final JPanel signUpPanel = new JPanel();
     private final JLabel signUpId = new JLabel("ID : ");
     private final JLabel signUpPw = new JLabel("Password : ");
     private final JButton checkDuplicateButton = new JButton("ID 중복 확인");
@@ -26,18 +27,19 @@ public class SignUpPanel extends JPanel{
     }
 
     private void initUI(){
-        setLayout(new GridLayout(6, 2, 10, 10));
-        setBorder(BorderFactory.createTitledBorder("회원가입"));
-        add(signUpId);
-        add(signUpIdField);
-        add(new JLabel()); // 빈 라벨
-        add(setStyledButton(checkDuplicateButton));
-        add(signUpPw);
-        add(signUpPwField);
-        add(new JLabel("Password 확인 : "));
-        add(signUpConfirmPwField);
-        add(setStyledButton(submitButton));
-        add(setStyledButton(backButton));
+        signUpPanel.setLayout(new GridLayout(5, 2, 10, 10));
+        signUpPanel.setBorder(BorderFactory.createTitledBorder("회원가입"));
+        signUpPanel.add(signUpId);
+        signUpPanel.add(signUpIdField);
+        signUpPanel.add(new JLabel()); // 빈 라벨
+        signUpPanel.add(setStyledButton(checkDuplicateButton));
+        signUpPanel.add(signUpPw);
+        signUpPanel.add(signUpPwField);
+        signUpPanel.add(new JLabel("Password 확인 : "));
+        signUpPanel.add(signUpConfirmPwField);
+        signUpPanel.add(setStyledButton(submitButton));
+        signUpPanel.add(setStyledButton(backButton));
+        add(signUpPanel);
 
         checkDuplicateButton.addActionListener(e -> checkDuplicate());
         submitButton.addActionListener(e -> submitSignUp());
@@ -149,14 +151,7 @@ public class SignUpPanel extends JPanel{
 
     // 로그인 패널 표시
     private void showLoginPanel() {
-        clearFields();
         tetris.switchPanel(new LoginPanel(tetris));
-    }
-
-    private void clearFields(){
-        signUpIdField.setText("");
-        signUpPwField.setText("");
-        signUpConfirmPwField.setText("");
     }
 
     private JButton setStyledButton(JButton button){

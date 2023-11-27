@@ -14,6 +14,7 @@ public class Tetris extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
         setLocationRelativeTo(null);
+        // setResizable(false);
         add(new MainMenu(this));
     }
 

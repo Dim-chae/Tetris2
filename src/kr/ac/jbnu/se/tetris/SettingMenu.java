@@ -32,7 +32,6 @@ public class SettingMenu extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // 설정을 저장하고 설정 메뉴를 닫도록 구현
-//                System.out.println("볼륨 설정 : " + tetris.getBgmVolume());
                 tetris.switchPanel(new MainMenu(tetris)); // 메인 메뉴로 이동
             }
         });
