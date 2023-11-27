@@ -1,4 +1,4 @@
-package kr.ac.jbnu.se.tetris;
+package main.java.kr.ac.jbnu.se.tetris;
 
 import javax.sound.sampled.*;
 import java.io.File;
@@ -6,7 +6,7 @@ import java.io.IOException;
 
 public class Bgm {
     private Clip audioClip;
-    private static final String AUDIO_FILE_PATH = "src/kr/ac/jbnu/se/tetris/resources/bgm.wav";
+    private final String AUDIO_FILE_PATH = "src\\main\\resources\\bgm.wav";
     private FloatControl volumeControl; // 볼륨 조절 컨트롤
 
     public Bgm() {

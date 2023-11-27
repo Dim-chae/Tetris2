@@ -1,4 +1,4 @@
-package kr.ac.jbnu.se.tetris;
+package main.java.kr.ac.jbnu.se.tetris;
 
 public enum Tetrominoes {
 	NoShape { Shape getShape() { return new Shape_No(); } },

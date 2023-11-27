@@ -1,4 +1,4 @@
-package kr.ac.jbnu.se.tetris;
+package main.java.kr.ac.jbnu.se.tetris;
 
 import java.awt.*;
 import javax.swing.*;
@@ -14,7 +14,7 @@ public class Tetris extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
         setLocationRelativeTo(null);
-        // setResizable(false);
+        setResizable(false);
         add(new MainMenu(this));
     }
 

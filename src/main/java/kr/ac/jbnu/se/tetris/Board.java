@@ -1,4 +1,4 @@
-package kr.ac.jbnu.se.tetris;
+package main.java.kr.ac.jbnu.se.tetris;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -39,8 +39,8 @@ public class Board extends JPanel implements ActionListener {
 	protected JLabel nextPieceLabel = new JLabel();
 	protected JLabel holdPieceLabel = new JLabel();
 	protected JButton itemButton = new JButton();
-	private ImageIcon itemImage = new ImageIcon("src\\kr\\ac\\jbnu\\se\\tetris\\resources\\itemIcon.png");
-	private ImageIcon backGroundImage = new ImageIcon("src\\kr\\ac\\jbnu\\se\\tetris\\resources\\backGround.jpg");
+	private ImageIcon itemImage = new ImageIcon("src\\main\\resources\\itemIcon.png");
+	private ImageIcon backGroundImage = new ImageIcon("src\\main\\resources\\backGround.jpg");
 	private Font font = new Font("맑은 고딕", Font.BOLD, 13);
 	private JPanel pausePanel = new JPanel();
 	private JLabel pauseLabel = new JLabel("Pause");
@@ -526,26 +526,26 @@ public class Board extends JPanel implements ActionListener {
 
 	private void showHelpScreen() {
 		String msg = """
-             다양한 난이도와 모드를 지원하는 테트리스 게임입니다.
+            다양한 난이도와 모드를 지원하는 테트리스 게임입니다.
 
-             [모드 설명]
-             스프린트: 40줄을 최대한 빠른 시간 안에 지우는 모드
-             타임어택: 2분 동안 많은 줄을 제거하는 모드
-             고스트: 고스트만 보이는 모드
+            [모드 설명]
+            스프린트: 40줄을 최대한 빠른 시간 안에 지우는 모드
+            타임어택: 2분 동안 많은 줄을 제거하는 모드
+            고스트: 고스트만 보이는 모드
 
-             [아이템 설명 : 폭탄]
-             I 버튼이나 폭탄 아이콘을 누르면 아이템을 사용할 수 있습니다.
-             사용 시 해당 시점에 쌓인 블록의 수만큼 점수가 100점씩 추가됩니다.
-             레벨이 1 올라갈 때마다 아이템을 1개씩 얻을 수 있습니다.
+            [아이템 설명 : 폭탄]
+            I 버튼이나 폭탄 아이콘을 누르면 아이템을 사용할 수 있습니다.
+            사용 시 해당 시점에 쌓인 블록의 수만큼 점수가 100점씩 추가됩니다.
+            레벨이 1 올라갈 때마다 아이템을 1개씩 얻을 수 있습니다.
 
-             [단축키]
-             좌우 방향 키: 블록 이동
-             상 방향 키: 블록 회전
-             하 방향 키: 소프트 드롭
-             Space: 하드 드롭
-             C: 홀드
-             ESC: 일시정지
-             """;
+            [단축키]
+            좌우 방향 키: 블록 이동
+            상 방향 키: 블록 회전
+            하 방향 키: 소프트 드롭
+            Space: 하드 드롭
+            C: 홀드
+            ESC: 일시정지
+            """;
 
 		JOptionPane.showMessageDialog(this, msg, "도움말", JOptionPane.INFORMATION_MESSAGE);
 	}
