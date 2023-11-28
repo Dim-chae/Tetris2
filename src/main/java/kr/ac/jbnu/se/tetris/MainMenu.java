@@ -13,15 +13,11 @@ import java.nio.charset.StandardCharsets;
 
 public class MainMenu extends JPanel {
     private final Tetris tetris;
+    private final String mainFontName = "맑은 고딕";
     private final JPanel topPanel = new JPanel(new BorderLayout());
     private final JPanel centerPanel = new JPanel(new GridLayout(4, 1, 10, 10));
     private final JPanel bottomPanel = new JPanel(new FlowLayout());
-    private String userId;
-    private int userMaxScore;
-    private int userLevel;
     private final JLabel title = new JLabel("테트리스", SwingConstants.CENTER);
-    private JLabel profileLabel;
-    private final JPopupMenu difficultyPopupMenu = new JPopupMenu();
     private final JButton normalModeButton = new JButton("기본 모드");
     private final JButton sprintButton = new JButton("스프린트 모드");
     private final JButton timeattackButton = new JButton("타임어택 모드");
@@ -29,6 +25,11 @@ public class MainMenu extends JPanel {
     private final JButton achievementButton = new JButton("업적");
     private final JButton rankingButton = new JButton("랭킹");
     private final JButton settingButton = new JButton("설정");
+    private final JPopupMenu difficultyPopupMenu = new JPopupMenu();
+
+    private String userId;
+    private int userMaxScore;
+    private int userLevel;
 
     public MainMenu(Tetris tetris) {
         this.tetris = tetris;
@@ -48,15 +49,16 @@ public class MainMenu extends JPanel {
     }
 
     private void addTopPanel(){
+        JLabel profileLabel;
         // 상단 패널에 타이틀과 프로필 라벨 추가
         topPanel.setBackground(Color.WHITE);
         topPanel.setBorder(BorderFactory.createEmptyBorder(0, 50, 10, 50));
 
-        title.setFont(new Font("맑은 고딕", Font.BOLD, 32));
+        title.setFont(new Font(mainFontName, Font.BOLD, 32));
         topPanel.add(title, BorderLayout.NORTH);
         
         profileLabel = new JLabel("ID : " + userId + " | Level : " + userLevel + " | 최고 기록 : " + userMaxScore, SwingConstants.CENTER);
-        profileLabel.setFont(new Font("맑은 고딕", Font.PLAIN, 16));
+        profileLabel.setFont(new Font(mainFontName, Font.PLAIN, 16));
         topPanel.add(profileLabel, BorderLayout.SOUTH);
         
         add(topPanel, BorderLayout.NORTH);
@@ -133,18 +135,18 @@ public class MainMenu extends JPanel {
         button.setPreferredSize(new Dimension(width, height));
         button.setBackground(new Color(70, 130, 180));
         button.setForeground(Color.WHITE);
-        button.setFont(new Font("맑은 고딕", Font.BOLD, 13));
+        button.setFont(new Font(mainFontName, Font.BOLD, 13));
         button.setFocusPainted(false);
         return button;
     }
 
     // 사용자 ID와 최고 점수를 올바르게 전달 백엔드
     private void sendUserMaxScoreToServer() {
-        String userId = tetris.getUserId();
+        String id = tetris.getUserId();
         int maxScore = tetris.getUserMaxScore();
 
         // Use the existing sendScoreToServer method to send the user's max score
-        boolean scoreSent = sendScoreToServer(userId, maxScore);
+        boolean scoreSent = sendScoreToServer(id, maxScore);
 
         if (scoreSent) {
             System.out.println("Max score sent to the server successfully.");

@@ -5,7 +5,7 @@ import javax.swing.*;
 
 public class Tetris extends JFrame {
     
-    public static Player player = new Player("", 100000000, 1, 0, 1);
+    public static Player player = new Player("", 0, 1, 0 ,7);
     private int bgmVolume = 100;
 
     public Tetris() {
@@ -51,7 +51,11 @@ public class Tetris extends JFrame {
     }
 
     public int getUserItemReserves() {
-        return Player.getItemReserves();
+        return player.getItemReserves();
+    }
+
+    public void setUserItemReserves(int num){
+        player.setItemReserves(num);
     }
 
     public void switchPanel(JPanel panel) {

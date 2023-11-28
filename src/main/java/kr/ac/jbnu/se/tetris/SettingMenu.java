@@ -8,7 +8,7 @@ import java.awt.event.*;
 import javax.swing.SwingConstants;
 
 public class SettingMenu extends JPanel {
-    private JSlider volumeSlider;
+    private final JSlider volumeSlider;
 
     public SettingMenu(Tetris tetris) {
         setLayout(new FlowLayout());
@@ -31,7 +31,6 @@ public class SettingMenu extends JPanel {
         saveButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // 설정을 저장하고 설정 메뉴를 닫도록 구현
                 tetris.switchPanel(new MainMenu(tetris)); // 메인 메뉴로 이동
             }
         });
@@ -51,7 +50,6 @@ public class SettingMenu extends JPanel {
         JButton logoutButton = new JButton("로그아웃");
         logoutButton.setPreferredSize(new Dimension(200, 50));
         logoutButton.addActionListener(e -> {
-//            System.out.println("로그아웃 선택됨");
             tetris.switchPanel(new LoginPanel(tetris));
         }); add(setStyledButton(logoutButton));
     }
