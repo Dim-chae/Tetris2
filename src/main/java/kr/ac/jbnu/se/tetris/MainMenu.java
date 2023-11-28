@@ -29,6 +29,7 @@ public class MainMenu extends JPanel {
     private final JButton achievementButton = new JButton("업적");
     private final JButton rankingButton = new JButton("랭킹");
     private final JButton settingButton = new JButton("설정");
+    private static final String FONT_NAME = "맑은 고딕";
 
     public MainMenu(Tetris tetris) {
         this.tetris = tetris;
@@ -52,11 +53,11 @@ public class MainMenu extends JPanel {
         topPanel.setBackground(Color.WHITE);
         topPanel.setBorder(BorderFactory.createEmptyBorder(0, 50, 10, 50));
 
-        title.setFont(new Font("맑은 고딕", Font.BOLD, 32));
+        title.setFont(new Font(FONT_NAME, Font.BOLD, 32));
         topPanel.add(title, BorderLayout.NORTH);
         
         profileLabel = new JLabel("ID : " + userId + " | Level : " + userLevel + " | 최고 기록 : " + userMaxScore, SwingConstants.CENTER);
-        profileLabel.setFont(new Font("맑은 고딕", Font.PLAIN, 16));
+        profileLabel.setFont(new Font(FONT_NAME, Font.PLAIN, 16));
         topPanel.add(profileLabel, BorderLayout.SOUTH);
         
         add(topPanel, BorderLayout.NORTH);
@@ -133,7 +134,7 @@ public class MainMenu extends JPanel {
         button.setPreferredSize(new Dimension(width, height));
         button.setBackground(new Color(70, 130, 180));
         button.setForeground(Color.WHITE);
-        button.setFont(new Font("맑은 고딕", Font.BOLD, 13));
+        button.setFont(new Font(FONT_NAME, Font.BOLD, 13));
         button.setFocusPainted(false);
         return button;
     }

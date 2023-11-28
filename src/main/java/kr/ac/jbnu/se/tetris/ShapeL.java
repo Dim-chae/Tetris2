@@ -7,7 +7,7 @@ public class ShapeL extends Shape {
     public ShapeL() {
         super();
         coords = new int[][]{ { -1, -1 }, { 0, -1 }, { 0, 0 }, { 0, 1 } };
-        pieceShape = Tetrominoes.LShape;
+        pieceShape = Tetrominoes.SHAPE_L;
         color = new Color(102, 204, 204);
         image = new ImageIcon("src\\main\\resources\\LShape.png");
     }

@@ -7,7 +7,7 @@ public class ShapeTrioLine extends Shape {
     public ShapeTrioLine() {
         super();
         coords = new int[][]{ { -1, 0 }, { 0, 0 }, { 0, 0 }, { 1, 0 }  };
-        pieceShape = Tetrominoes.TrioLineShape;
+        pieceShape = Tetrominoes.SHAPE_TRIO_LINE;
         color = Color.PINK;
         image = new ImageIcon("src\\main\\resources\\TrioLine.png");
     }

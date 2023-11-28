@@ -6,7 +6,7 @@ public class ShapeOneBlock extends Shape{
     public ShapeOneBlock(){
         super();
         coords = new int[][]{ { 0, 0 }, { 0, 0 }, { 0, 0 }, { 0, 0 } };
-        pieceShape = Tetrominoes.OneBlockShape;
+        pieceShape = Tetrominoes.SHAPE_ONE_BLOCK;
         color = new Color(128, 128, 128);
     }    
 }

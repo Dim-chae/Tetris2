@@ -8,6 +8,7 @@ public class Shape {
     protected int[][] coords;
     protected Tetrominoes pieceShape;
     protected Color color;
+	private Random r = new Random();
     protected ImageIcon image;    
 
 	private int x;
@@ -16,7 +17,7 @@ public class Shape {
     public Shape(){
         x = 0;
         y = 0;
-        setShape(Tetrominoes.NoShape);
+        setShape(Tetrominoes.SHAPE_NO);
 		coords = new int[][]{{0, 0}, {0, 0}, {0, 0}, {0, 0}};
     }
 
@@ -29,7 +30,6 @@ public class Shape {
     }
 
 	public Shape setRandomShape(){
-        Random r = new Random();
         int ran = Math.abs(r.nextInt()) % (Tetrominoes.values().length-2) + 2;
         return Tetrominoes.values()[ran].getShape();
     }
@@ -101,7 +101,7 @@ public class Shape {
 	}
 
 	public Shape rotateRight() {
-		if (pieceShape == Tetrominoes.SquareShape)
+		if (pieceShape == Tetrominoes.SHAPE_SQUARE)
 			return this;
 
 		Shape result = new Shape();
