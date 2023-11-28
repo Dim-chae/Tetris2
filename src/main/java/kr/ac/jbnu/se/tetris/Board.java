@@ -143,7 +143,7 @@ public class Board extends JPanel implements ActionListener {
 		if(result == JOptionPane.YES_OPTION){
 			hidePauseScreen();
 			clearBoard();
-			holdPiece.setShape(Tetrominoes.NoShape);
+			holdPiece.setShape(Tetrominoes.SHAPE_NO);
 			nextPiece = new Shape().setRandomShape();
 			createNewPiece();
 			score = 0;
@@ -167,7 +167,7 @@ public class Board extends JPanel implements ActionListener {
 				tryMove(newPiece, newX - 1, newY); 
 			if (x < 0 || x >= BOARD_WIDTH || y < 0 || y >= BOARD_HEGHT) 
 				return false;
-			if (tetrisBoard[x][y] != Tetrominoes.NoShape)
+			if (tetrisBoard[x][y] != Tetrominoes.SHAPE_NO)
 				return false;
 		}
 		return true; 
@@ -243,7 +243,7 @@ public class Board extends JPanel implements ActionListener {
 		for(int i = BOARD_HEGHT - 1; i >= 0; i--) {
 			boolean lineIsFull = true;
 			for(int j = 0; j < BOARD_WIDTH; j++) {
-				if(tetrisBoard[j][i] == Tetrominoes.NoShape) {
+				if(tetrisBoard[j][i] == Tetrominoes.SHAPE_NO) {
 					lineIsFull = false;
 					break;
 				}
@@ -256,7 +256,7 @@ public class Board extends JPanel implements ActionListener {
 					}
 				}
 				for(int j = 0; j < BOARD_WIDTH; j++) {
-					tetrisBoard[j][0] = Tetrominoes.NoShape;
+					tetrisBoard[j][0] = Tetrominoes.SHAPE_NO;
 				}
 				i++;
 			}
@@ -266,7 +266,7 @@ public class Board extends JPanel implements ActionListener {
 			combo += numFullLines;
 			numLinesRemoved += numFullLines;
 			isFallingFinished = true;
-			curPiece.setShape(Tetrominoes.NoShape);
+			curPiece.setShape(Tetrominoes.SHAPE_NO);
 			repaint();
 		} else {
 			combo = 0;
@@ -281,7 +281,7 @@ public class Board extends JPanel implements ActionListener {
 	private void holdCurPiece(){
 		if(isUseHold) return;
 
-		if(holdPiece.getShape() == Tetrominoes.NoShape){
+		if(holdPiece.getShape() == Tetrominoes.SHAPE_NO){
 			holdPiece = curPiece;
 			createNewPiece();
 		} else {
@@ -306,12 +306,12 @@ public class Board extends JPanel implements ActionListener {
 		}
 		
 		for (int i=0; i<BOARD_WIDTH; ++i){
-			tetrisBoard[i][BOARD_HEGHT - 1] = Tetrominoes.OneBlockShape;
+			tetrisBoard[i][BOARD_HEGHT - 1] = Tetrominoes.SHAPE_ONE_BLOCK;
 		}
 
 		Random random = new Random();
 		int randomX = random.nextInt(BOARD_WIDTH);
-		tetrisBoard[randomX][BOARD_HEGHT - 1] = Tetrominoes.NoShape;
+		tetrisBoard[randomX][BOARD_HEGHT - 1] = Tetrominoes.SHAPE_NO;
 
 		repaint();
 	}
@@ -319,7 +319,7 @@ public class Board extends JPanel implements ActionListener {
 	private void clearBoard(){
 		for(int i = 0; i < BOARD_WIDTH; i++){
 			for(int j = 0; j < BOARD_HEGHT; j++){
-				tetrisBoard[i][j] = Tetrominoes.NoShape;
+				tetrisBoard[i][j] = Tetrominoes.SHAPE_NO;
 			}
 		}
 	}
@@ -336,7 +336,7 @@ public class Board extends JPanel implements ActionListener {
     }
 
     private void drawPiece(Graphics g){
-        if(curPiece.getShape() == Tetrominoes.NoShape){
+        if(curPiece.getShape() == Tetrominoes.SHAPE_NO){
 			return;
 		}
 		for(int i = 0; i < 4; ++i){
@@ -452,7 +452,7 @@ public class Board extends JPanel implements ActionListener {
 		int blockCount = 0;
 		for(int i = 0; i < BOARD_WIDTH; i++){
 			for(int j = 0; j < BOARD_HEGHT; j++){
-				if(tetrisBoard[i][j] != Tetrominoes.NoShape){
+				if(tetrisBoard[i][j] != Tetrominoes.SHAPE_NO){
 					blockCount++;
 				}
 			}
