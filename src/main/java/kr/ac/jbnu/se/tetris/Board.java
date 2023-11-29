@@ -330,10 +330,6 @@ public class Board extends JPanel implements ActionListener {
 		
 		for (int i=0; i<BOARD_WIDTH; ++i){
 			tetrisBoard[i][BOARD_HEIGHT - 1] = Tetrominoes.ONE_BLOCK_SHAPE;
-		}
-
-		int randomX = random.nextInt(BOARD_WIDTH);
-		tetrisBoard[randomX][BOARD_HEIGHT - 1] = Tetrominoes.NO_SHAPE;
 
 		repaint();
 	}
