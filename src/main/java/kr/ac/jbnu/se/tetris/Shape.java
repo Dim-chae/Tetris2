@@ -79,24 +79,6 @@ public class Shape {
         return image;
     }
 
-	public void moveDown(){
-		for(int i = 0; i < coords.length; i++){
-            coords[i][1]++;
-        }
-	}
-
-	public void moveLeft(){
-		for(int i = 0; i < coords.length; i++){
-			coords[i][0]--;
-		}
-	}
-
-	public void moveRight(){
-		for(int i = 0; i < coords.length; i++){
-			coords[i][0]++;
-		}
-	}
-
 	public Shape rotateRight() {
 		if (pieceShape == Tetrominoes.SQUARE_SHAPE)
 			return this;

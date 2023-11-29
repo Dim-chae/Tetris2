@@ -30,8 +30,6 @@ public class Player {
         return level;
     }
 
-    public int getExp() { return exp; }
-
     public void setUserId(String userId) {
         this.userId = userId;
     }
@@ -64,13 +62,5 @@ public class Player {
     public void addExp(int exp) {
         this.exp += exp;
         setLevel();
-    }
-
-    public void setExp(int exp) { this.exp = exp; }
-
-    public void updateMaxScore(int score) {
-        if (score > maxScore) {
-            maxScore = score;
-        }
     }
 }
