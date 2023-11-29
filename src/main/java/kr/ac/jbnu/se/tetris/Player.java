@@ -30,8 +30,6 @@ public class Player {
         return level;
     }
 
-    public int getExp() { return exp; }
-
     public void setUserId(String userId) {
         this.userId = userId;
     }
