@@ -42,10 +42,6 @@ public class Tetris extends JFrame {
         player.setLevel();
     }
 
-    public int getUserExp() {
-        return player.getExp();
-    }
-
     public void addUserExp(int exp) {
         player.addExp(exp);
     }

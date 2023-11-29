@@ -65,12 +65,4 @@ public class Player {
         this.exp += exp;
         setLevel();
     }
-
-    public void setExp(int exp) { this.exp = exp; }
-
-    public void updateMaxScore(int score) {
-        if (score > maxScore) {
-            maxScore = score;
-        }
-    }
 }

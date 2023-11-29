@@ -32,10 +32,13 @@ public class MainMenu extends JPanel {
         this.tetris = tetris;
         this.userId = tetris.getUserId();
         this.userMaxScore = getMaxScoreFromServer(userId);
+        this.userLevel = tetris.getUserLevel();
+
         initUI();
         sendUserMaxScoreToServer();
     }
 
+    // UI 초기화
     private void initUI(){
         setLayout(new FlowLayout());
         setBackground(Color.WHITE);
@@ -45,6 +48,7 @@ public class MainMenu extends JPanel {
         addBottomPanel();
     }
 
+    // 상단 패널에 제목과 사용자 정보 추가
     private void addTopPanel(){
         JLabel profileLabel;
         topPanel.setBackground(Color.WHITE);
@@ -61,24 +65,31 @@ public class MainMenu extends JPanel {
     }
 
     private void addCenterPanel(){
+        // 기본 모드 버튼
         normalModeButton.addActionListener(e -> showDifficultyPopupMenu());
         centerPanel.add(setStyledButton(normalModeButton, 200, 40));
 
+        // 스프린트 모드 버튼
         sprintButton.addActionListener(e -> tetris.switchPanel(new SprintMode(tetris)));
         centerPanel.add(setStyledButton(sprintButton, 200, 40));
         
+
+        // 타임어택 모드 버튼
         timeattackButton.addActionListener(e -> tetris.switchPanel(new TimeAttackMode(tetris)));
         centerPanel.add(setStyledButton(timeattackButton, 200, 40));
         
+        // 고스트 모드 버튼
         ghostModeButton.addActionListener(e -> tetris.switchPanel(new GhostMode(tetris)));
         centerPanel.add(setStyledButton(ghostModeButton, 200, 40));
 
+        // 중앙 패널 설정
         centerPanel.setBackground(Color.WHITE);
         centerPanel.setBorder(BorderFactory.createTitledBorder("게임 모드"));
         centerPanel.setPreferredSize(new Dimension(250, 200));
         add(centerPanel, BorderLayout.CENTER);
     }
 
+    // 기본모드 난이도 선택 팝업 메뉴
     private void showDifficultyPopupMenu(){        
         String[] difficulty = {"Easy", "Normal", "Hard", "Very Hard", "God"};
         for(String diff : difficulty){
@@ -163,6 +174,7 @@ public class MainMenu extends JPanel {
         return false; // Score sending failed
     }
     
+    // 서버로부터 최고 점수를 가져오는 메소드
     private int getMaxScoreFromServer(String userId) {
         try {
             URL url = new URL("http://localhost:3000/showPanelMaxScore?user_id=" + userId); // 서버의 엔드포인트 URL로 업데이트

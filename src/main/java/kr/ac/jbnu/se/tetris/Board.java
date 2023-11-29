@@ -40,12 +40,12 @@ public class Board extends JPanel implements ActionListener {
 	private boolean isFallingFinished = false;
 	protected boolean isPaused = false;
 	private boolean isUseHold = false;
-	private String modeName;
-	private Tetrominoes[][] tetrisBoard = new Tetrominoes[BOARD_WIDTH][BOARD_HEIGHT];
+	private final String modeName;
+	private final Tetrominoes[][] tetrisBoard = new Tetrominoes[BOARD_WIDTH][BOARD_HEIGHT];
 	protected JLabel scoreLabel = new JLabel("Score : " + score);
-	private JLabel statusLabel = new JLabel();
+	private final JLabel statusLabel = new JLabel();
 	protected JLabel comboLabel = new JLabel("Combo : " + combo);
-	private JLabel pauseLabel = new JLabel("Pause");
+	private final JLabel pauseLabel = new JLabel("Pause");
 	protected JLabel nextPieceLabel = new JLabel();
 	protected JLabel holdPieceLabel = new JLabel();
 
@@ -155,15 +155,15 @@ public class Board extends JPanel implements ActionListener {
 			int x = newX + newPiece.getX(i);
 			int y = newY + newPiece.getY(i); 
 			if ((x < 0) && (y >= 0 || y <= BOARD_HEIGHT))
-				tryMove(newPiece, newX + 1, newY); 
-			if ((x >= BOARD_WIDTH) && (y >= 0 || y <= BOARD_HEIGHT)) 
-				tryMove(newPiece, newX - 1, newY); 
-			if (x < 0 || x >= BOARD_WIDTH || y < 0 || y >= BOARD_HEIGHT) 
+				tryMove(newPiece, newX + 1, newY);
+			if ((x >= BOARD_WIDTH) && (y >= 0 || y <= BOARD_HEIGHT))
+				tryMove(newPiece, newX - 1, newY);
+			if (x < 0 || x >= BOARD_WIDTH || y < 0 || y >= BOARD_HEIGHT)
 				return false;
 			if (tetrisBoard[x][y] != Tetrominoes.NO_SHAPE)
 				return false;
 		}
-		return true; 
+		return true;
 	}
 
 	private boolean tryMove(Shape newPiece, int newX, int newY) {
@@ -196,6 +196,8 @@ public class Board extends JPanel implements ActionListener {
 		pauseLabel.setText("Game Over");
 		statusLabel.setText("Game Over");
 		calcGameExp();
+		tetris.setUserLevel();
+		tetris.setUserMaxScore(score);
 	}
 	
 	public void hardDrop() {
