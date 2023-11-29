@@ -6,14 +6,12 @@ public class Player {
     private int maxScore;
     private int level;
     private int exp;
-    private int itemReserves;
     
-    public Player(String userId, int maxScore, int level, int exp, int itemReserves) {
+    public Player(String userId, int maxScore, int level, int exp) {
         this.userId = userId;
         this.maxScore = maxScore;
         this.level = level;
         this.exp = exp;
-        this.itemReserves = itemReserves;
     }
 
     public String getUserId() {
@@ -38,21 +36,9 @@ public class Player {
         this.userId = userId;
     }
 
-    public int getItemReserves() { return itemReserves; }
-
-    // public static void subItemReserves() { itemReserves--; }
-
-    // public static void addItemReserves(){ itemReserves++; }
-
-    public void setItemReserves(int num) {
-        itemReserves = num;
-    }
-
     public void setLevel() {
         int calcLev = this.exp / 300;
-        if(calcLev > level - 1){
-            for(int i = calcLev + 1 - level; i > 0; i--) itemReserves++;
-        }
+
         switch (calcLev) {
             case 0:
                 this.level = 1;

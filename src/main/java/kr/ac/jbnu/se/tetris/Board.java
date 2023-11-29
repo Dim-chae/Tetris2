@@ -2,8 +2,6 @@ package kr.ac.jbnu.se.tetris;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.image.BufferedImage;
-import java.util.Random;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 
@@ -20,7 +18,7 @@ public class Board extends JPanel implements ActionListener {
 	protected transient Shape nextPiece;
 	protected transient Shape holdPiece = new Shape();
 
-	private final JPanel rightPanel = new JPanel(new FlowLayout());
+	private final JPanel rightPanel = new JPanel();
 	private final JPanel nextPiecePanel = new JPanel();
 	private final JPanel holdPiecePanel = new JPanel();
 	private final JPanel statusPanel = new JPanel();
@@ -32,7 +30,6 @@ public class Board extends JPanel implements ActionListener {
 	private final JButton restartButton = new JButton("Restart");
 	private final JButton mainMenuButton = new JButton("Main Menu");
 	private final JButton helpButton = new JButton("Help");
-	private final Random random = new Random();
 
 	private Timer timer;
 	private Timer lineTimer;
@@ -79,7 +76,7 @@ public class Board extends JPanel implements ActionListener {
 		lineTimer.start();
 		bgm = new Bgm();
 		bgm.setVolume(tetris.getBgmVolume());
-		itemCount = tetris.getUserItemReserves();
+		itemCount = 2;
 		isFallingFinished = false;
 
 		clearBoard();
@@ -330,6 +327,7 @@ public class Board extends JPanel implements ActionListener {
 		
 		for (int i=0; i<BOARD_WIDTH; ++i){
 			tetrisBoard[i][BOARD_HEIGHT - 1] = Tetrominoes.ONE_BLOCK_SHAPE;
+		}
 
 		repaint();
 	}
@@ -353,7 +351,7 @@ public class Board extends JPanel implements ActionListener {
 		updateScorePanel();
     }
 
-    private void drawPiece(Graphics g){
+	protected void drawPiece(Graphics g){
         if(curPiece.getShape() == Tetrominoes.NO_SHAPE){
 			return;
 		}
@@ -364,7 +362,7 @@ public class Board extends JPanel implements ActionListener {
 		}
     }
 
-	private void drawBoard(Graphics g){
+	protected void drawBoard(Graphics g){
         for(int i = 0; i < BOARD_WIDTH; i++){
             for(int j = 0; j < BOARD_HEIGHT; j++){
                 drawSquare(g, i * SQUARE_SIZE, j * SQUARE_SIZE, tetrisBoard[i][j].getShape());
@@ -372,7 +370,7 @@ public class Board extends JPanel implements ActionListener {
         }
     }
 
-	private void drawGhost(Graphics g){
+	protected void drawGhost(Graphics g){
 		int curX = curPiece.getX();
         int newY = curPiece.getY();
 		g.setColor(Color.GRAY);
@@ -389,7 +387,7 @@ public class Board extends JPanel implements ActionListener {
 		}
 	}
 
-	private void drawGridPattern(Graphics g){
+	protected void drawGridPattern(Graphics g){
 		g.setColor(Color.WHITE);
 		for(int i = 0; i <= BOARD_WIDTH; i++){
 			g.drawLine(i * SQUARE_SIZE, 0, i * SQUARE_SIZE, BOARD_HEIGHT * SQUARE_SIZE);
@@ -414,7 +412,7 @@ public class Board extends JPanel implements ActionListener {
 		g.drawLine(x + SQUARE_SIZE - 1, y + SQUARE_SIZE - 1, x + SQUARE_SIZE - 1, y + 1);
 	}
 
-	private void drawBackgroundImage(Graphics g){
+	protected void drawBackgroundImage(Graphics g){
 		g.drawImage(backGroundImage.getImage(), 0, 0, null);
 	}
 
@@ -463,7 +461,7 @@ public class Board extends JPanel implements ActionListener {
 		rightPanel.add(itemButton);
 	}
 
-	private void useItem(){
+	private void useItem() {
 		if(isPaused) return;
 
 		int blockCount = 0;
@@ -538,7 +536,6 @@ public class Board extends JPanel implements ActionListener {
 		int result = JOptionPane.showConfirmDialog(null, "Go to Main Menu?", "Main Menu", JOptionPane.YES_NO_OPTION);
 		if(result == JOptionPane.YES_OPTION){
 			hidePauseScreen();
-			tetris.setUserItemReserves(itemCount);
 			tetris.switchPanel(new MainMenu(tetris));
 		}
 	}
@@ -586,9 +583,9 @@ public class Board extends JPanel implements ActionListener {
 			if (isPaused) return;
 
 			switch (keycode) {
-				case KeyEvent.VK_LEFT:
+			case KeyEvent.VK_LEFT:
                 tryMove(curPiece, curPiece.getX() - 1, curPiece.getY());
-                break;
+				break;
             case KeyEvent.VK_RIGHT:
                 tryMove(curPiece, curPiece.getX() + 1, curPiece.getY());
                 break;

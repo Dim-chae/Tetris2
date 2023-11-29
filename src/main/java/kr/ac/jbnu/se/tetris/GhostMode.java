@@ -9,6 +9,13 @@ public class GhostMode extends Board {
     }
 
     @Override
-    protected void drawSquare(Graphics g, int x, int y, Shape shape) {
+    public void paint(Graphics g){
+        super.paint(g);
+        drawBackgroundImage(g);
+        drawGridPattern(g);
+        drawGhost(g);
+        drawPiece(g);
+        drawBoard(g);
+        updateScorePanel();
     }
 }

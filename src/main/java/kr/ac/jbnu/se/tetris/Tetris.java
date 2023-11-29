@@ -5,7 +5,7 @@ import javax.swing.*;
 
 public class Tetris extends JFrame {
     
-    public static Player player = new Player("", 0, 1, 0 ,7);
+    private transient Player player = new Player("", 0, 1, 0);
     private int bgmVolume = 100;
 
     public Tetris() {
@@ -48,14 +48,6 @@ public class Tetris extends JFrame {
 
     public void addUserExp(int exp) {
         player.addExp(exp);
-    }
-
-    public int getUserItemReserves() {
-        return player.getItemReserves();
-    }
-
-    public void setUserItemReserves(int num){
-        player.setItemReserves(num);
     }
 
     public void switchPanel(JPanel panel) {
