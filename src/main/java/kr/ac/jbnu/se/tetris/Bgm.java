@@ -6,7 +6,7 @@ import java.io.IOException;
 
 public class Bgm {
     private Clip audioClip;
-    private final String AUDIO_FILE_PATH = "src\\main\\resources\\bgm.wav";
+    private static final String AUDIO_FILE_PATH = "src\\main\\resources\\bgm.wav";
     private FloatControl volumeControl; // 볼륨 조절 컨트롤
 
     public Bgm() {

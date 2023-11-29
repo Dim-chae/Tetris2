@@ -3,7 +3,7 @@ package kr.ac.jbnu.se.tetris;
 import javax.swing.*;
 
 public class SprintMode extends Board{
-    private static final int LINE_TO_CLEAR = 1;
+    private static final int LINE_TO_CLEAR = 40;
 
     private final Timer sprintTimer;
     private float runningTime = 0;
@@ -22,7 +22,7 @@ public class SprintMode extends Board{
             JOptionPane.showMessageDialog(null, "Clear Time - " + (int)runningTime + " 초", "Game Clear!", JOptionPane.INFORMATION_MESSAGE);
             tetris.switchPanel(new MainMenu(tetris));
         } else {
-            runningTime += 0.1;
+            runningTime += 0.1f;
             updateScorePanel();
         }
     }

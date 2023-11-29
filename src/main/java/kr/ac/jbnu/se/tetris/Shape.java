@@ -8,8 +8,8 @@ public class Shape {
     protected int[][] coords;
     protected Tetrominoes pieceShape;
     protected Color color;
-	private Random r = new Random();
-    protected ImageIcon image;    
+    protected ImageIcon image;
+	private final Random random = new Random();
 
 	private int x;
 	private int y;
@@ -17,7 +17,7 @@ public class Shape {
     public Shape(){
         x = 0;
         y = 0;
-        setShape(Tetrominoes.SHAPE_NO);
+        setShape(Tetrominoes.NO_SHAPE);
 		coords = new int[][]{{0, 0}, {0, 0}, {0, 0}, {0, 0}};
     }
 
@@ -30,8 +30,9 @@ public class Shape {
     }
 
 	public Shape setRandomShape(){
-        int ran = Math.abs(r.nextInt()) % (Tetrominoes.values().length-2) + 2;
-        return Tetrominoes.values()[ran].getShape();
+		int r = random.nextInt();
+        int randomShape = Math.abs(r) % (Tetrominoes.values().length-2) + 2;
+        return Tetrominoes.values()[randomShape].getShape();
     }
 	
 	public int[][] getCoords(){
@@ -56,9 +57,9 @@ public class Shape {
 
 	public int getMinY(){
 		int m = coords[0][1];
-		for(int i = 0; i < coords.length; i++){
-			m = Math.min(m, coords[i][1]);
-		}
+        for (int[] coord : coords) {
+            m = Math.min(m, coord[1]);
+        }
 		return m;
 	}
 
@@ -68,10 +69,6 @@ public class Shape {
 
 	public void setY(int y){
 		this.y = y;
-	}
-
-	public String getShapeToString(){
-		return pieceShape.toString();
 	}
 
 	public Color getColor(){
@@ -101,7 +98,7 @@ public class Shape {
 	}
 
 	public Shape rotateRight() {
-		if (pieceShape == Tetrominoes.SHAPE_SQUARE)
+		if (pieceShape == Tetrominoes.SQUARE_SHAPE)
 			return this;
 
 		Shape result = new Shape();

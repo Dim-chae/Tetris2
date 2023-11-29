@@ -2,53 +2,52 @@ package kr.ac.jbnu.se.tetris;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.util.Random;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 
 public class Board extends JPanel implements ActionListener {
 	protected Tetris tetris;
 
-	protected final static int BOARD_WIDTH = 10;
-	protected final static int BOARD_HEGHT = 20;
-	private final int SQUARE_SIZE = 20;
+	private static final int BOARD_WIDTH = 10;
+	private static final int BOARD_HEIGHT = 20;
+	private static final int SQUARE_SIZE = 20;
+	private static final Font GAME_FONT = new Font("맑은 고딕", Font.BOLD, 13);
 
-	private Bgm bgm;
+	private transient Bgm bgm;
+	private transient Shape curPiece;
+	protected transient Shape nextPiece;
+	protected transient Shape holdPiece = new Shape();
+
+	private final JPanel rightPanel = new JPanel();
+	private final JPanel nextPiecePanel = new JPanel();
+	private final JPanel holdPiecePanel = new JPanel();
+	private final JPanel statusPanel = new JPanel();
+	protected final JButton itemButton = new JButton();
+	private final ImageIcon itemImage = new ImageIcon("src\\main\\resources\\itemIcon.png");
+	private final ImageIcon backGroundImage = new ImageIcon("src\\main\\resources\\backGround.jpg");
+	private final JPanel pausePanel = new JPanel();
+	private final JButton resumeButton = new JButton("Resume");
+	private final JButton restartButton = new JButton("Restart");
+	private final JButton mainMenuButton = new JButton("Main Menu");
+	private final JButton helpButton = new JButton("Help");
+
 	private Timer timer;
 	private Timer lineTimer;
-	private Shape curPiece;
-	protected Shape nextPiece;
-	protected Shape holdPiece = new Shape();
-	private Shape tmpPiece = new Shape();
-	protected Tetrominoes[][] tetrisBoard = new Tetrominoes[BOARD_WIDTH][BOARD_HEGHT];
+	private int combo = 0;
+	private int score = 0;
 	protected int numLinesRemoved = 0;
-	protected int itemCount = 3;
-	protected boolean isFallingFinished = false;
-	protected int combo = 0;
-	protected int score = 0;
-	private String modeName = "";
-	protected JLabel scoreLabel = new JLabel("Score : " + score);
-	protected JLabel statusLabel = new JLabel();
-	protected JLabel comboLabel = new JLabel("Combo : " + combo);
+	protected int itemCount;
+	private boolean isFallingFinished = false;
 	protected boolean isPaused = false;
 	private boolean isUseHold = false;
-	private JPanel rightPanel = new JPanel(new FlowLayout());
-	private JPanel nextPiecePanel = new JPanel();
-	private JPanel holdPiecePanel = new JPanel();
-	private JPanel statusPanel = new JPanel();
+	private String modeName;
+	private Tetrominoes[][] tetrisBoard = new Tetrominoes[BOARD_WIDTH][BOARD_HEIGHT];
+	protected JLabel scoreLabel = new JLabel("Score : " + score);
+	private JLabel statusLabel = new JLabel();
+	protected JLabel comboLabel = new JLabel("Combo : " + combo);
+	private JLabel pauseLabel = new JLabel("Pause");
 	protected JLabel nextPieceLabel = new JLabel();
 	protected JLabel holdPieceLabel = new JLabel();
-	protected JButton itemButton = new JButton();
-	private ImageIcon itemImage = new ImageIcon("src\\main\\resources\\itemIcon.png");
-	private ImageIcon backGroundImage = new ImageIcon("src\\main\\resources\\backGround.jpg");
-	private Font font = new Font("맑은 고딕", Font.BOLD, 13);
-	private JPanel pausePanel = new JPanel();
-	private JLabel pauseLabel = new JLabel("Pause");
-	private JButton resumeButton = new JButton("Resume");
-	private JButton restartButton = new JButton("Restart");
-	private JButton mainMenuButton = new JButton("Main Menu");
-	private JButton helpButton = new JButton("Help");
-	private JLayeredPane layeredPane;
 
 	public Board(Tetris tetris, String modeName) {
 		this.tetris = tetris;
@@ -67,8 +66,6 @@ public class Board extends JPanel implements ActionListener {
 	}
 
 	private void initGame(){
-		clearBoard();
-		addKeyListener(new TAdapter());
 		curPiece = new Shape().setRandomShape();
 		curPiece.setX(BOARD_WIDTH / 2);
 		curPiece.setY(0);
@@ -79,27 +76,21 @@ public class Board extends JPanel implements ActionListener {
 		lineTimer.start();
 		bgm = new Bgm();
 		bgm.setVolume(tetris.getBgmVolume());
+		itemCount = 2;
 		isFallingFinished = false;
+
+		clearBoard();
+		addKeyListener(new TAdapter());
 	}
 
 	private int setTimerDelay(String modeName) {
-		switch (modeName) {
-			case "Easy":
-			case "Time Attack":
-			case "Sprint":
-			case "Ghost":
-				return 500;
-			case "Normal":
-				return 300;
-			case "Hard":
-				return 200;
-			case "Very Hard":
-				return 80;
-			case "God":
-				return 30;
-			default:
-				return 400;
-		}
+        return switch (modeName) {
+            case "Normal" -> 300;
+            case "Hard" -> 200;
+            case "Very Hard" -> 80;
+            case "God" -> 30;
+            default -> 500;
+        };
 	}
 
 	@Override
@@ -113,7 +104,7 @@ public class Board extends JPanel implements ActionListener {
         repaint();
 	}
 
-	protected void pause(){
+	private void pause(){
 		if(isPaused) return;
 
 		isPaused = true;
@@ -141,19 +132,21 @@ public class Board extends JPanel implements ActionListener {
 
 		int result = JOptionPane.showConfirmDialog(null, "Restart?", "Restart", JOptionPane.YES_NO_OPTION);
 		if(result == JOptionPane.YES_OPTION){
-			hidePauseScreen();
-			clearBoard();
-			holdPiece.setShape(Tetrominoes.SHAPE_NO);
-			nextPiece = new Shape().setRandomShape();
-			createNewPiece();
+			requestFocusInWindow();
+
+			isPaused = false;
 			score = 0;
 			combo = 0;
-			itemCount = 3;
-			isPaused = false;
 			bgm.replay();
 			timer.start();
 			lineTimer.start();
-			requestFocusInWindow();
+			nextPiece = new Shape().setRandomShape();
+			holdPiece.setShape(Tetrominoes.NO_SHAPE);
+			holdPieceLabel.setIcon(null);
+			hidePauseScreen();
+			clearBoard();
+			createNewPiece();
+			repaint();
 		}
 	}
 
@@ -161,26 +154,28 @@ public class Board extends JPanel implements ActionListener {
 		for (int i = 0; i < 4; ++i) {
 			int x = newX + newPiece.getX(i);
 			int y = newY + newPiece.getY(i); 
-			if ((x < 0) && (y >= 0 || y <= BOARD_HEGHT))
+			if ((x < 0) && (y >= 0 || y <= BOARD_HEIGHT))
 				tryMove(newPiece, newX + 1, newY); 
-			if ((x >= BOARD_WIDTH) && (y >= 0 || y <= BOARD_HEGHT)) 
+			if ((x >= BOARD_WIDTH) && (y >= 0 || y <= BOARD_HEIGHT)) 
 				tryMove(newPiece, newX - 1, newY); 
-			if (x < 0 || x >= BOARD_WIDTH || y < 0 || y >= BOARD_HEGHT) 
+			if (x < 0 || x >= BOARD_WIDTH || y < 0 || y >= BOARD_HEIGHT) 
 				return false;
-			if (tetrisBoard[x][y] != Tetrominoes.SHAPE_NO)
+			if (tetrisBoard[x][y] != Tetrominoes.NO_SHAPE)
 				return false;
 		}
 		return true; 
 	}
 
 	private boolean tryMove(Shape newPiece, int newX, int newY) {
-		if(!canMove(newPiece, newX, newY)) return false;
-
-		curPiece = newPiece; 
-		curPiece.setX(newX);
-		curPiece.setY(newY);
+		if(canMove(newPiece, newX, newY)){
+			curPiece = newPiece;
+			curPiece.setX(newX);
+			curPiece.setY(newY);
+			repaint();
+			return true;
+		}
 		repaint();
-		return true;
+		return false;
 	}
 
 	private void createNewPiece() {
@@ -205,7 +200,7 @@ public class Board extends JPanel implements ActionListener {
 	
 	public void hardDrop() {
 		int newY = curPiece.getY();
-		while (newY < BOARD_HEGHT - 1) {
+		while (newY < BOARD_HEIGHT - 1) {
 			if (!tryMove(curPiece, curPiece.getX(), newY + 1)) {
 				break;
 			}
@@ -237,40 +232,64 @@ public class Board extends JPanel implements ActionListener {
 	}
 
 	private void removeFullLines() {
-		int numFullLines = 0;
-		int comboScore = 0;
+		int numFullLines = countFullLines();
+		updateGameStatus(numFullLines);
+	}
 
-		for(int i = BOARD_HEGHT - 1; i >= 0; i--) {
-			boolean lineIsFull = true;
-			for(int j = 0; j < BOARD_WIDTH; j++) {
-				if(tetrisBoard[j][i] == Tetrominoes.SHAPE_NO) {
-					lineIsFull = false;
-					break;
-				}
-			}
-			if(lineIsFull) {
+	private int countFullLines() {
+		int numFullLines = 0;
+		int i = BOARD_HEIGHT - 1;
+
+		while (i >= 0) {
+			if (isLineFull(i)) {
 				numFullLines++;
-				for(int k = i; k > 0; k--) {
-					for(int j = 0; j < BOARD_WIDTH; j++) {
-						tetrisBoard[j][k] = tetrisBoard[j][k - 1];
-					}
-				}
-				for(int j = 0; j < BOARD_WIDTH; j++) {
-					tetrisBoard[j][0] = Tetrominoes.SHAPE_NO;
-				}
+				shiftLinesDown(i);
+				clearTopLine();
 				i++;
 			}
+			i--;
 		}
+		return numFullLines;
+	}
 
+	private boolean isLineFull(int lineIndex) {
+		for (int j = 0; j < BOARD_WIDTH; j++) {
+			if (tetrisBoard[j][lineIndex] == Tetrominoes.NO_SHAPE) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private void shiftLinesDown(int startIndex) {
+		for (int k = startIndex; k > 0; k--) {
+			for (int j = 0; j < BOARD_WIDTH; j++) {
+				tetrisBoard[j][k] = tetrisBoard[j][k - 1];
+			}
+		}
+	}
+
+	private void clearTopLine() {
+		for (int j = 0; j < BOARD_WIDTH; j++) {
+			tetrisBoard[j][0] = Tetrominoes.NO_SHAPE;
+		}
+	}
+
+	private void updateGameStatus(int numFullLines) {
 		if (numFullLines > 0) {
-			combo += numFullLines;
-			numLinesRemoved += numFullLines;
+			addScore(numFullLines);
 			isFallingFinished = true;
-			curPiece.setShape(Tetrominoes.SHAPE_NO);
+			curPiece.setShape(Tetrominoes.NO_SHAPE);
 			repaint();
 		} else {
 			combo = 0;
 		}
+	}
+
+	private void addScore(int numFullLines) {
+		int comboScore = 0;
+		combo += numFullLines;
+		numLinesRemoved += numFullLines;
 
 		if (combo > 1) {
 			comboScore = 50 * combo;
@@ -279,9 +298,10 @@ public class Board extends JPanel implements ActionListener {
 	}
 
 	private void holdCurPiece(){
+		Shape tmpPiece;
 		if(isUseHold) return;
 
-		if(holdPiece.getShape() == Tetrominoes.SHAPE_NO){
+		if(holdPiece.getShape() == Tetrominoes.NO_SHAPE){
 			holdPiece = curPiece;
 			createNewPiece();
 		} else {
@@ -300,26 +320,22 @@ public class Board extends JPanel implements ActionListener {
 
 	private void makeOneRandomLine(){
 		for(int i = 0; i < BOARD_WIDTH; i++){
-			for(int j = 0; j < BOARD_HEGHT - 1; j++){
+			for(int j = 0; j < BOARD_HEIGHT - 1; j++){
 				tetrisBoard[i][j] = tetrisBoard[i][j + 1];
 			}
 		}
 		
 		for (int i=0; i<BOARD_WIDTH; ++i){
-			tetrisBoard[i][BOARD_HEGHT - 1] = Tetrominoes.SHAPE_ONE_BLOCK;
+			tetrisBoard[i][BOARD_HEIGHT - 1] = Tetrominoes.ONE_BLOCK_SHAPE;
 		}
-
-		Random random = new Random();
-		int randomX = random.nextInt(BOARD_WIDTH);
-		tetrisBoard[randomX][BOARD_HEGHT - 1] = Tetrominoes.SHAPE_NO;
 
 		repaint();
 	}
 
 	private void clearBoard(){
 		for(int i = 0; i < BOARD_WIDTH; i++){
-			for(int j = 0; j < BOARD_HEGHT; j++){
-				tetrisBoard[i][j] = Tetrominoes.SHAPE_NO;
+			for(int j = 0; j < BOARD_HEIGHT; j++){
+				tetrisBoard[i][j] = Tetrominoes.NO_SHAPE;
 			}
 		}
 	}
@@ -327,7 +343,7 @@ public class Board extends JPanel implements ActionListener {
     @Override
     public void paint(Graphics g){
         super.paint(g);
-		// drawBackgroudImage(g);
+		drawBackgroundImage(g);
 		drawGridPattern(g);
 		drawGhost(g);
         drawPiece(g);
@@ -335,31 +351,30 @@ public class Board extends JPanel implements ActionListener {
 		updateScorePanel();
     }
 
-    private void drawPiece(Graphics g){
-        if(curPiece.getShape() == Tetrominoes.SHAPE_NO){
+	protected void drawPiece(Graphics g){
+        if(curPiece.getShape() == Tetrominoes.NO_SHAPE){
 			return;
 		}
 		for(int i = 0; i < 4; ++i){
 			int x = curPiece.getX() + curPiece.getCoords()[i][0];
 			int y = curPiece.getY() + curPiece.getCoords()[i][1];
-			drawSquare(g, x * SQUARE_SIZE, y * SQUARE_SIZE, curPiece.getShape());
+			drawSquare(g, x * SQUARE_SIZE, y * SQUARE_SIZE, curPiece);
 		}
     }
 
-	private void drawBoard(Graphics g){
+	protected void drawBoard(Graphics g){
         for(int i = 0; i < BOARD_WIDTH; i++){
-            for(int j = 0; j < BOARD_HEGHT; j++){
-                drawSquare(g, i * SQUARE_SIZE, j * SQUARE_SIZE, tetrisBoard[i][j]);
+            for(int j = 0; j < BOARD_HEIGHT; j++){
+                drawSquare(g, i * SQUARE_SIZE, j * SQUARE_SIZE, tetrisBoard[i][j].getShape());
             }
         }
     }
 
-	private void drawGhost(Graphics g){
+	protected void drawGhost(Graphics g){
 		int curX = curPiece.getX();
-		int curY = curPiece.getY();
-		int newY = curY;
+        int newY = curPiece.getY();
 		g.setColor(Color.GRAY);
-		while (newY < BOARD_HEGHT - 1) {
+		while (newY < BOARD_HEIGHT - 1) {
 			if (!canMove(curPiece, curX, newY + 1)) {
 				break;
 			}
@@ -372,18 +387,18 @@ public class Board extends JPanel implements ActionListener {
 		}
 	}
 
-	private void drawGridPattern(Graphics g){
+	protected void drawGridPattern(Graphics g){
 		g.setColor(Color.WHITE);
 		for(int i = 0; i <= BOARD_WIDTH; i++){
-			g.drawLine(i * SQUARE_SIZE, 0, i * SQUARE_SIZE, BOARD_HEGHT * SQUARE_SIZE);
+			g.drawLine(i * SQUARE_SIZE, 0, i * SQUARE_SIZE, BOARD_HEIGHT * SQUARE_SIZE);
 		}
-		for(int i = 0; i <= BOARD_HEGHT; i++){
+		for(int i = 0; i <= BOARD_HEIGHT; i++){
 			g.drawLine(0, i * SQUARE_SIZE, BOARD_WIDTH * SQUARE_SIZE, i * SQUARE_SIZE);
 		}
 	}
 
-    protected void drawSquare(Graphics g, int x, int y, Tetrominoes shape) {
-		Color color = shape.getShape().getColor();
+    protected void drawSquare(Graphics g, int x, int y, Shape shape) {
+		Color color = shape.getColor();
 		
 		g.setColor(color);
 		g.fillRect(x + 1, y + 1, SQUARE_SIZE - 2, SQUARE_SIZE - 2);
@@ -397,7 +412,7 @@ public class Board extends JPanel implements ActionListener {
 		g.drawLine(x + SQUARE_SIZE - 1, y + SQUARE_SIZE - 1, x + SQUARE_SIZE - 1, y + 1);
 	}
 
-	private void drawBackgroudImage(Graphics g){
+	protected void drawBackgroundImage(Graphics g){
 		g.drawImage(backGroundImage.getImage(), 0, 0, null);
 	}
 
@@ -417,21 +432,21 @@ public class Board extends JPanel implements ActionListener {
 
 	private void addNextPiecePanel(){
 		nextPiecePanel.setPreferredSize(new Dimension(100, 100));
-		nextPiecePanel.setBorder(BorderFactory.createTitledBorder(null, "Next Piece", TitledBorder.CENTER, TitledBorder.TOP, font, new Color(70, 130, 180)));
+		nextPiecePanel.setBorder(BorderFactory.createTitledBorder(null, "Next Piece", TitledBorder.CENTER, TitledBorder.TOP, GAME_FONT, new Color(70, 130, 180)));
 		nextPiecePanel.add(nextPieceLabel);
 		rightPanel.add(nextPiecePanel);
 	}
 
 	private void addHoldPiecePanel(){
 		holdPiecePanel.setPreferredSize(new Dimension(100, 100));
-		holdPiecePanel.setBorder(BorderFactory.createTitledBorder(null, "Hold Piece", TitledBorder.CENTER, TitledBorder.TOP, font, new Color(70, 130, 180)));
+		holdPiecePanel.setBorder(BorderFactory.createTitledBorder(null, "Hold Piece", TitledBorder.CENTER, TitledBorder.TOP, GAME_FONT, new Color(70, 130, 180)));
 		holdPiecePanel.add(holdPieceLabel);
 		rightPanel.add(holdPiecePanel);
 	}
 
 	private void addStatusPanel(){
 		statusPanel.setPreferredSize(new Dimension(100, 100));
-		statusPanel.setBorder(BorderFactory.createTitledBorder(null, "Status", TitledBorder.CENTER, TitledBorder.TOP, font, new Color(70, 130, 180)));
+		statusPanel.setBorder(BorderFactory.createTitledBorder(null, "Status", TitledBorder.CENTER, TitledBorder.TOP, GAME_FONT, new Color(70, 130, 180)));
 		statusPanel.add(statusLabel);
 		statusPanel.add(scoreLabel);
 		statusPanel.add(comboLabel);
@@ -446,13 +461,13 @@ public class Board extends JPanel implements ActionListener {
 		rightPanel.add(itemButton);
 	}
 
-	private void useItem(){
+	private void useItem() {
 		if(isPaused) return;
 
 		int blockCount = 0;
 		for(int i = 0; i < BOARD_WIDTH; i++){
-			for(int j = 0; j < BOARD_HEGHT; j++){
-				if(tetrisBoard[i][j] != Tetrominoes.SHAPE_NO){
+			for(int j = 0; j < BOARD_HEIGHT; j++){
+				if(tetrisBoard[i][j] != Tetrominoes.NO_SHAPE){
 					blockCount++;
 				}
 			}
@@ -477,6 +492,7 @@ public class Board extends JPanel implements ActionListener {
 	}
 
 	private void addPausePanel(){
+		JLayeredPane layeredPane;
 		layeredPane = tetris.getLayeredPane();
 		layeredPane.add(pausePanel, JLayeredPane.PALETTE_LAYER);
 		pausePanel.setBounds(0, 0, 200, 450);
@@ -485,8 +501,8 @@ public class Board extends JPanel implements ActionListener {
 
 		pauseLabel.setFont(new Font("맑은 고딕", Font.BOLD, 25));
 		pauseLabel.setForeground(Color.WHITE);
-		pauseLabel.setHorizontalAlignment(JLabel.CENTER);
-		pauseLabel.setVerticalAlignment(JLabel.CENTER);
+		pauseLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		pauseLabel.setVerticalAlignment(SwingConstants.CENTER);
 		
 		resumeButton.setPreferredSize(new Dimension(150, 40));
 		resumeButton.addActionListener(e -> resume());
@@ -516,7 +532,7 @@ public class Board extends JPanel implements ActionListener {
 		pausePanel.setVisible(false);
 	}
 
-	protected void goMainMenu(){
+	private void goMainMenu(){
 		int result = JOptionPane.showConfirmDialog(null, "Go to Main Menu?", "Main Menu", JOptionPane.YES_NO_OPTION);
 		if(result == JOptionPane.YES_OPTION){
 			hidePauseScreen();
@@ -567,9 +583,9 @@ public class Board extends JPanel implements ActionListener {
 			if (isPaused) return;
 
 			switch (keycode) {
-				case KeyEvent.VK_LEFT:
+			case KeyEvent.VK_LEFT:
                 tryMove(curPiece, curPiece.getX() - 1, curPiece.getY());
-                break;
+				break;
             case KeyEvent.VK_RIGHT:
                 tryMove(curPiece, curPiece.getX() + 1, curPiece.getY());
                 break;
@@ -582,12 +598,10 @@ public class Board extends JPanel implements ActionListener {
             case KeyEvent.VK_SPACE:
                 hardDrop();
                 break;
-            case 'c':
-            case 'C':
+            case 'c', 'C':
 				holdCurPiece();
                 break;
-			case 'i':
-			case 'I':
+			case 'i', 'I':
 				useItem();
 				break;
 			default:

@@ -53,10 +53,9 @@ public class Ranking extends JPanel {
         backButton.setBackground(new Color(70, 130, 180));
         backButton.setForeground(Color.WHITE);
         backButton.setFont(new Font("맑은 고딕", Font.BOLD, 13));
-        backButton.addActionListener(e -> {
-//            System.out.println("뒤로 가기 버튼 선택됨");
-            tetris.switchPanel(new MainMenu(tetris));
-        });
+        backButton.addActionListener(e ->
+            tetris.switchPanel(new MainMenu(tetris))
+        );
         add(backButton, BorderLayout.SOUTH);
     }
 

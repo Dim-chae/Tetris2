@@ -9,7 +9,7 @@ import java.nio.charset.StandardCharsets;
 
 public class LoginPanel extends JPanel {
     private final Tetris tetris;
-    private final JPanel loginPanel = new JPanel();
+    private final JPanel mainPanel = new JPanel();
     private final JLabel loginId = new JLabel("ID : ");
     private final JLabel loginPw = new JLabel("Password : ");
     private final JButton loginButton = new JButton("Login");
@@ -23,15 +23,15 @@ public class LoginPanel extends JPanel {
     }
 
     private void initUI(){
-        loginPanel.setLayout(new GridLayout(3, 2, 10, 10));
-        loginPanel.setBorder(BorderFactory.createTitledBorder("로그인"));
-        loginPanel.add(loginId);
-        loginPanel.add(loginIdField);
-        loginPanel.add(loginPw);
-        loginPanel.add(loginPwField);
-        loginPanel.add(setStyledButton(loginButton));
-        loginPanel.add(setStyledButton(signUpButton));
-        add(loginPanel);
+        mainPanel.setLayout(new GridLayout(3, 2, 10, 10));
+        mainPanel.setBorder(BorderFactory.createTitledBorder("로그인"));
+        mainPanel.add(loginId);
+        mainPanel.add(loginIdField);
+        mainPanel.add(loginPw);
+        mainPanel.add(loginPwField);
+        mainPanel.add(setStyledButton(loginButton));
+        mainPanel.add(setStyledButton(signUpButton));
+        add(mainPanel);
 
         loginButton.addActionListener(e -> login());
         signUpButton.addActionListener(e -> showSignUpPanel());

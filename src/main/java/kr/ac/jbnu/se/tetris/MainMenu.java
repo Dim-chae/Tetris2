@@ -3,25 +3,18 @@ package kr.ac.jbnu.se.tetris;
 import org.json.JSONObject;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
 public class MainMenu extends JPanel {
     private final Tetris tetris;
+    private static final String MAIN_FONT_NAME = "맑은 고딕";
     private final JPanel topPanel = new JPanel(new BorderLayout());
     private final JPanel centerPanel = new JPanel(new GridLayout(4, 1, 10, 10));
     private final JPanel bottomPanel = new JPanel(new FlowLayout());
-    private String userId;
-    private int userMaxScore;
-    private int userLevel;
     private final JLabel title = new JLabel("테트리스", SwingConstants.CENTER);
-    private JLabel profileLabel;
-    private final JPopupMenu difficultyPopupMenu = new JPopupMenu();
     private final JButton normalModeButton = new JButton("기본 모드");
     private final JButton sprintButton = new JButton("스프린트 모드");
     private final JButton timeattackButton = new JButton("타임어택 모드");
@@ -29,7 +22,11 @@ public class MainMenu extends JPanel {
     private final JButton achievementButton = new JButton("업적");
     private final JButton rankingButton = new JButton("랭킹");
     private final JButton settingButton = new JButton("설정");
-    private static final String FONT_NAME = "맑은 고딕";
+    private final JPopupMenu difficultyPopupMenu = new JPopupMenu();
+
+    private String userId;
+    private int userMaxScore;
+    private int userLevel;
 
     public MainMenu(Tetris tetris) {
         this.tetris = tetris;
@@ -49,79 +46,61 @@ public class MainMenu extends JPanel {
     }
 
     private void addTopPanel(){
-        // 상단 패널에 타이틀과 프로필 라벨 추가
+        JLabel profileLabel;
         topPanel.setBackground(Color.WHITE);
         topPanel.setBorder(BorderFactory.createEmptyBorder(0, 50, 10, 50));
 
-        title.setFont(new Font(FONT_NAME, Font.BOLD, 32));
+        title.setFont(new Font(MAIN_FONT_NAME, Font.BOLD, 32));
         topPanel.add(title, BorderLayout.NORTH);
         
         profileLabel = new JLabel("ID : " + userId + " | Level : " + userLevel + " | 최고 기록 : " + userMaxScore, SwingConstants.CENTER);
-        profileLabel.setFont(new Font(FONT_NAME, Font.PLAIN, 16));
+        profileLabel.setFont(new Font(MAIN_FONT_NAME, Font.PLAIN, 16));
         topPanel.add(profileLabel, BorderLayout.SOUTH);
         
         add(topPanel, BorderLayout.NORTH);
     }
 
     private void addCenterPanel(){
-        // 게임 모드 버튼 (중앙 패널)
-        String[] difficulty = {"Easy", "Normal", "Hard", "Very Hard", "God"};
-        for(String diff : difficulty){
-            JMenuItem menuItem = new JMenuItem(diff);
-            menuItem.addActionListener(new ActionListener(){
-                @Override
-                public void actionPerformed(ActionEvent e){
-                    System.out.println("노말 모드(" + diff + ") 선택됨");
-                    tetris.switchPanel(new Board(tetris, diff));
-                }
-            }); difficultyPopupMenu.add(menuItem);
-        }
+        normalModeButton.addActionListener(e -> showDifficultyPopupMenu());
+        centerPanel.add(setStyledButton(normalModeButton, 200, 40));
 
-        normalModeButton.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e){
-                difficultyPopupMenu.show(normalModeButton, normalModeButton.getWidth() / 2, normalModeButton.getHeight());
-            }
-        }); centerPanel.add(setStyledButton(normalModeButton, 200, 40));
+        sprintButton.addActionListener(e -> tetris.switchPanel(new SprintMode(tetris)));
+        centerPanel.add(setStyledButton(sprintButton, 200, 40));
+        
+        timeattackButton.addActionListener(e -> tetris.switchPanel(new TimeAttackMode(tetris)));
+        centerPanel.add(setStyledButton(timeattackButton, 200, 40));
+        
+        ghostModeButton.addActionListener(e -> tetris.switchPanel(new GhostMode(tetris)));
+        centerPanel.add(setStyledButton(ghostModeButton, 200, 40));
 
-        // 스프린트 모드 버튼
-        sprintButton.addActionListener(e -> {
-            tetris.switchPanel(new SprintMode(tetris));
-        }); centerPanel.add(setStyledButton(sprintButton, 200, 40));
-
-        // 타임어택 모드 버튼
-        timeattackButton.addActionListener(e -> {
-            tetris.switchPanel(new TimeAttackMode(tetris));
-        }); centerPanel.add(setStyledButton(timeattackButton, 200, 50));
-
-        // 그림자 모드 버튼
-        ghostModeButton.addActionListener(e -> {
-            tetris.switchPanel(new GhostMode(tetris));
-        }); centerPanel.add(setStyledButton(ghostModeButton, 200, 50));
-
-        // 중앙 패널에 게임 모드 버튼 추가
         centerPanel.setBackground(Color.WHITE);
         centerPanel.setBorder(BorderFactory.createTitledBorder("게임 모드"));
         centerPanel.setPreferredSize(new Dimension(250, 200));
         add(centerPanel, BorderLayout.CENTER);
     }
 
+    private void showDifficultyPopupMenu(){        
+        String[] difficulty = {"Easy", "Normal", "Hard", "Very Hard", "God"};
+        for(String diff : difficulty){
+            JMenuItem menuItem = new JMenuItem(diff);
+            menuItem.addActionListener(e -> tetris.switchPanel(new Board(tetris, diff)));
+            difficultyPopupMenu.add(menuItem);
+        }
+        difficultyPopupMenu.show(normalModeButton, normalModeButton.getWidth() / 2, normalModeButton.getHeight());
+    }
 
     private void addBottomPanel(){
         // 업적 관리 버튼
-        achievementButton.addActionListener(e -> {
-            tetris.switchPanel(new AchievementMenu(tetris));
-        }); bottomPanel.add(setStyledButton(achievementButton, 75, 40));
+        achievementButton.addActionListener(e ->tetris.switchPanel(new AchievementMenu(tetris)));
+        bottomPanel.add(setStyledButton(achievementButton, 75, 40));
         
         // 랭킹 버튼
-        rankingButton.addActionListener(e -> {
-            tetris.switchPanel(new Ranking(tetris));
-        }); bottomPanel.add(setStyledButton(rankingButton, 75, 40));
+        rankingButton.addActionListener(e -> tetris.switchPanel(new Ranking(tetris)));
+        bottomPanel.add(setStyledButton(rankingButton, 75, 40));
 
         // 설정 버튼
-        settingButton.addActionListener(e -> {
-            tetris.switchPanel(new SettingMenu(tetris));
-        }); bottomPanel.add(setStyledButton(settingButton, 75, 40));
+        settingButton.addActionListener(e -> tetris.switchPanel(new SettingMenu(tetris)));
+        bottomPanel.add(setStyledButton(settingButton, 75, 40));
 
         // 하단 패널에 버튼 추가
         bottomPanel.setBackground(Color.WHITE);
@@ -134,18 +113,18 @@ public class MainMenu extends JPanel {
         button.setPreferredSize(new Dimension(width, height));
         button.setBackground(new Color(70, 130, 180));
         button.setForeground(Color.WHITE);
-        button.setFont(new Font(FONT_NAME, Font.BOLD, 13));
+        button.setFont(new Font(MAIN_FONT_NAME, Font.BOLD, 13));
         button.setFocusPainted(false);
         return button;
     }
 
     // 사용자 ID와 최고 점수를 올바르게 전달 백엔드
     private void sendUserMaxScoreToServer() {
-        String userId = tetris.getUserId();
+        String id = tetris.getUserId();
         int maxScore = tetris.getUserMaxScore();
 
         // Use the existing sendScoreToServer method to send the user's max score
-        boolean scoreSent = sendScoreToServer(userId, maxScore);
+        boolean scoreSent = sendScoreToServer(id, maxScore);
 
         if (scoreSent) {
             System.out.println("Max score sent to the server successfully.");
@@ -200,8 +179,7 @@ public class MainMenu extends JPanel {
             JSONObject jsonResponse = new JSONObject(responseData);
 
             // 최고 점수 추출
-            int maxScore = jsonResponse.getInt("max_score");
-            return maxScore;
+            return jsonResponse.getInt("max_score");
 
         } catch (IOException e) {
             // 서버 통신 오류 처리

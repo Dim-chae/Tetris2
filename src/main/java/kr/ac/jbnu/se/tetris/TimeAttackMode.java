@@ -3,8 +3,7 @@ package kr.ac.jbnu.se.tetris;
 import javax.swing.*;
 
 public class TimeAttackMode extends Board{
-    private static final float TIME_LIMIT = 4.0f;
-    private float remainingTime = TIME_LIMIT;
+    private float remainingTime = 120.0f;
     private final Timer taModeTimer;
 
     public TimeAttackMode(Tetris tetris) {
@@ -13,7 +12,7 @@ public class TimeAttackMode extends Board{
         taModeTimer.start();
     }
 
-    public void checkTimeOver() {
+    private void checkTimeOver() {
         if(isPaused) return;
         
         if(remainingTime <= 0) {

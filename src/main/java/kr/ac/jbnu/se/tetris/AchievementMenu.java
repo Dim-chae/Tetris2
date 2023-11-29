@@ -74,16 +74,16 @@ public class AchievementMenu extends JPanel {
 
     // 업적 목록 생성
     private void checkAchievement() {
-        int userMaxscore = tetris.getUserMaxScore();
-        if (userMaxscore >= 5000)
+        int maxScore = tetris.getUserMaxScore();
+        if (maxScore >= 5000)
             achievementList.add(new AchievementItem("초보자", "최고 점수 5000점 달성"));
-        if (userMaxscore >= 10000)
+        if (maxScore >= 10000)
             achievementList.add(new AchievementItem("중수", "최고 점수 10000점 달성"));
-        if (userMaxscore >= 15000)
+        if (maxScore >= 15000)
             achievementList.add(new AchievementItem("고수", "최고 점수 50000점 달성"));
-        if (userMaxscore >= 20000)
+        if (maxScore >= 20000)
             achievementList.add(new AchievementItem("마스터", "최고 점수 100000점 달성"));
-        if (userMaxscore >= 30000)
+        if (maxScore >= 30000)
             achievementList.add(new AchievementItem("전설", "최고 점수 250000점 달성"));
     }
 

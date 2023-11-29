@@ -1,6 +1,5 @@
 package kr.ac.jbnu.se.tetris;
 
-import java.awt.Color;
 import java.awt.Graphics;
 
 public class GhostMode extends Board {
@@ -10,7 +9,13 @@ public class GhostMode extends Board {
     }
 
     @Override
-    protected void drawSquare(Graphics g, int x, int y, Tetrominoes shape) {
-        g.setColor(new Color(0, 0, 0, 0));
+    public void paint(Graphics g){
+        super.paint(g);
+        drawBackgroundImage(g);
+        drawGridPattern(g);
+        drawGhost(g);
+        drawPiece(g);
+        drawBoard(g);
+        updateScorePanel();
     }
 }

@@ -14,7 +14,7 @@ public class SignUpPanel extends JPanel{
     private final JTextField signUpIdField = new JTextField(12);
     private final JPasswordField signUpPwField = new JPasswordField(12);
     private final JPasswordField signUpConfirmPwField = new JPasswordField(12);
-    private final JPanel signUpPanel = new JPanel();
+    private final JPanel mainPanel = new JPanel();
     private final JLabel signUpId = new JLabel("ID : ");
     private final JLabel signUpPw = new JLabel("Password : ");
     private final JButton checkDuplicateButton = new JButton("ID 중복 확인");
@@ -27,19 +27,19 @@ public class SignUpPanel extends JPanel{
     }
 
     private void initUI(){
-        signUpPanel.setLayout(new GridLayout(5, 2, 10, 10));
-        signUpPanel.setBorder(BorderFactory.createTitledBorder("회원가입"));
-        signUpPanel.add(signUpId);
-        signUpPanel.add(signUpIdField);
-        signUpPanel.add(new JLabel()); // 빈 라벨
-        signUpPanel.add(setStyledButton(checkDuplicateButton));
-        signUpPanel.add(signUpPw);
-        signUpPanel.add(signUpPwField);
-        signUpPanel.add(new JLabel("Password 확인 : "));
-        signUpPanel.add(signUpConfirmPwField);
-        signUpPanel.add(setStyledButton(submitButton));
-        signUpPanel.add(setStyledButton(backButton));
-        add(signUpPanel);
+        mainPanel.setLayout(new GridLayout(5, 2, 10, 10));
+        mainPanel.setBorder(BorderFactory.createTitledBorder("회원가입"));
+        mainPanel.add(signUpId);
+        mainPanel.add(signUpIdField);
+        mainPanel.add(new JLabel()); // 빈 라벨
+        mainPanel.add(setStyledButton(checkDuplicateButton));
+        mainPanel.add(signUpPw);
+        mainPanel.add(signUpPwField);
+        mainPanel.add(new JLabel("Password 확인 : "));
+        mainPanel.add(signUpConfirmPwField);
+        mainPanel.add(setStyledButton(submitButton));
+        mainPanel.add(setStyledButton(backButton));
+        add(mainPanel);
 
         checkDuplicateButton.addActionListener(e -> checkDuplicate());
         submitButton.addActionListener(e -> submitSignUp());

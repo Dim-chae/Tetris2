@@ -1,17 +1,19 @@
 package kr.ac.jbnu.se.tetris;
 
-public enum Tetrominoes {
-	SHAPE_NO { Shape getShape() { return new ShapeNo(); } },
-	SHAPE_ONE_BLOCK { Shape getShape() { return new ShapeOneBlock(); } },
-	SHAPE_Z { Shape getShape() { return new ShapeZ(); } },
-    SHAPE_S { Shape getShape() { return new ShapeS(); } },
-    SHAPE_LINE { Shape getShape() { return new ShapeLine(); } },
-    SHAPE_T { Shape getShape() { return new ShapeT(); } },
-    SHAPE_SQUARE { Shape getShape() { return new ShapeSquare(); } },
-    SHAPE_L { Shape getShape() { return new ShapeL(); } },
-    SHAPE_MIRRORED_L { Shape getShape() { return new ShapeMirroredL(); } },
-    SHAPE_TRIO_LINE { Shape getShape() { return new ShapeTrioLine(); } },
-    SHAPE_SCYTHE { Shape getShape() { return new ShapeScythe(); } };
+import kr.ac.jbnu.se.tetris.shapetypes.*;
 
-    abstract Shape getShape();
+public enum Tetrominoes {
+    NO_SHAPE { public Shape getShape() { return new ShapeNo(); } },
+    ONE_BLOCK_SHAPE { public Shape getShape() { return new ShapeOneBlock(); } },
+    Z_SHAPE { public Shape getShape() { return new ShapeZ(); } },
+    S_SHAPE { public Shape getShape() { return new ShapeS(); } },
+    LINE_SHAPE { public Shape getShape() { return new ShapeLine(); } },
+    T_SHAPE { public Shape getShape() { return new ShapeT(); } },
+    SQUARE_SHAPE { public Shape getShape() { return new ShapeSquare(); } },
+    L_SHAPE { public Shape getShape() { return new ShapeL(); } },
+    MIRRORED_L_SHAPE { public Shape getShape() { return new ShapeMirroredL(); } },
+    TRIO_LINE_SHAPE { public Shape getShape() { return new ShapeTrioLine(); } },
+    SCYTHE_SHAPE { public Shape getShape() { return new ShapeScythe(); } };
+
+    public abstract Shape getShape();
 }
