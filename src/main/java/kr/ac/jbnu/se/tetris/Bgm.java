@@ -3,11 +3,12 @@ package kr.ac.jbnu.se.tetris;
 import javax.sound.sampled.*;
 import java.io.File;
 import java.io.IOException;
-
+import java.util.logging.Logger;
 public class Bgm {
     private Clip audioClip;
     private static final String AUDIO_FILE_PATH = "src\\main\\resources\\bgm.wav";
     private FloatControl volumeControl; // 볼륨 조절 컨트롤
+    private static final Logger logger = Logger.getLogger(Bgm.class.getName());
 
     public Bgm() {
         try {
@@ -30,7 +31,7 @@ public class Bgm {
             volumeControl = (FloatControl) audioClip.getControl(FloatControl.Type.MASTER_GAIN);
 
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-            e.printStackTrace();
+            logger.severe("Exception while initializing Bgm: " + e.getMessage());
         }
     }
 

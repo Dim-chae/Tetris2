@@ -6,6 +6,8 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class LoginPanel extends JPanel {
     private final Tetris tetris;
@@ -16,6 +18,7 @@ public class LoginPanel extends JPanel {
     private final JButton signUpButton = new JButton("Sign Up");
     private final JTextField loginIdField = new JTextField(12);
     private final JPasswordField loginPwField = new JPasswordField(12);
+    private static final Logger logger = Logger.getLogger(LoginPanel.class.getName());
 
     public LoginPanel(Tetris tetris){
         this.tetris = tetris;
@@ -85,7 +88,7 @@ public class LoginPanel extends JPanel {
                 return true; // 로그인 성공
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
+            logger.log(Level.SEVERE, "로그인 중 에러 발생", ex);
         }
 
         return false; // 로그인 실패

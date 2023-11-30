@@ -2,7 +2,6 @@ package kr.ac.jbnu.se.tetris;
 
 import javax.swing.*;
 import java.awt.*;
-import javax.swing.SwingConstants;
 
 public class SettingMenu extends JPanel {
     private final Tetris tetris;

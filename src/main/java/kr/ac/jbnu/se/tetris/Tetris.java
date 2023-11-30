@@ -3,7 +3,7 @@ package kr.ac.jbnu.se.tetris;
 import java.awt.*;
 import javax.swing.*;
 
-public class Tetris extends JFrame {
+public class Tetris extends JFrame  {
     
     private final transient Player player = new Player("", 0, 1, 0);
     private int bgmVolume = 100;
@@ -53,6 +53,7 @@ public class Tetris extends JFrame {
         repaint();
         panel.requestFocus();
     }
+
 
     public void setBgmVolume(int volume) {
         this.bgmVolume = volume;

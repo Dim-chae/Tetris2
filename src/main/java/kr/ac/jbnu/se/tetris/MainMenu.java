@@ -8,6 +8,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.logging.Logger;
+import java.util.logging.Level;
 
 public class MainMenu extends JPanel {
     private static final String MAIN_FONT_NAME = "맑은 고딕";
@@ -165,7 +166,7 @@ public class MainMenu extends JPanel {
                 return true; // Score sent successfully
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
+            logger.log(Level.SEVERE, "스코어 전송 중 에러 발생", ex);
         }
 
         return false; // Score sending failed
@@ -192,10 +193,10 @@ public class MainMenu extends JPanel {
 
         } catch (IOException e) {
             // 서버 통신 오류 처리
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "서버 통신 중 에러 발생", e);
         } catch (Exception ex) {
             // JSON 파싱 오류 처리
-            ex.printStackTrace();
+            logger.log(Level.SEVERE, "JSON 파싱 중 에러 발생", ex);
         }
 
         return 0; // 요청 실패 시 기본값 반환

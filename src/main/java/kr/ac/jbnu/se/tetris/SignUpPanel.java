@@ -6,8 +6,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
-
 import javax.swing.*;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 public class SignUpPanel extends JPanel{
     private final Tetris tetris;
@@ -20,6 +21,8 @@ public class SignUpPanel extends JPanel{
     private final JButton checkDuplicateButton = new JButton("ID 중복 확인");
     private final JButton submitButton = new JButton("Submit");
     private final JButton backButton = new JButton("Back");
+    private static final Logger logger = Logger.getLogger(SignUpPanel.class.getName());
+
 
     public SignUpPanel(Tetris tetris){
         this.tetris = tetris;
@@ -109,7 +112,7 @@ public class SignUpPanel extends JPanel{
                 return true; // 회원가입 성공
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
+            logger.log(Level.SEVERE, "회원가입 중 에러 발생", ex);
         }
 
         return false; // 회원가입 실패
@@ -143,7 +146,7 @@ public class SignUpPanel extends JPanel{
                 return false;
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
+            logger.log(Level.SEVERE, "중복 ID 확인 중 에러 발생", ex);
         }
 
         return false;
