@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -68,7 +69,7 @@ public class Ranking extends JPanel {
             // 서버로부터 응답 받기
             InputStream responseStream = connection.getInputStream();
             // 응답 데이터를 문자열로 읽어오기
-            String responseData = new String(responseStream.readAllBytes());
+            String responseData = new String(responseStream.readAllBytes(), StandardCharsets.UTF_8);
             responseStream.close();
 
             // JSON 데이터 파싱

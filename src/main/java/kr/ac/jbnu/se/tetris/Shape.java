@@ -30,10 +30,9 @@ public class Shape {
     }
 
 	public Shape setRandomShape(){
-		int r = random.nextInt();
-        int randomShape = Math.abs(r) % (Tetrominoes.values().length-2) + 2;
-        return Tetrominoes.values()[randomShape].getShape();
-    }
+		int randomShape = random.nextInt(Tetrominoes.values().length - 2) + 2;
+		return Tetrominoes.values()[randomShape].getShape();
+	}
 	
 	public int[][] getCoords(){
 		return coords;

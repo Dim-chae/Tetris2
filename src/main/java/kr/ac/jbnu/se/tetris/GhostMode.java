@@ -11,11 +11,5 @@ public class GhostMode extends Board {
     @Override
     public void paint(Graphics g){
         super.paint(g);
-        drawBackgroundImage(g);
-        drawGridPattern(g);
-        drawGhost(g);
-        drawPiece(g);
-        drawBoard(g);
-        updateScorePanel();
     }
 }
