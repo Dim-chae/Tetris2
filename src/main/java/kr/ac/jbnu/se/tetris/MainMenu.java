@@ -7,8 +7,10 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.logging.Logger;
 
 public class MainMenu extends JPanel {
+    transient Logger logger = Logger.getLogger(getClass().getName());
     private final Tetris tetris;
     private static final String MAIN_FONT_NAME = "맑은 고딕";
     private final JPanel topPanel = new JPanel(new BorderLayout());
@@ -138,9 +140,9 @@ public class MainMenu extends JPanel {
         boolean scoreSent = sendScoreToServer(id, maxScore);
 
         if (scoreSent) {
-            System.out.println("Max score sent to the server successfully.");
+            logger.info("Max score sent to the server successfully.");
         } else {
-            System.out.println("Failed to send max score to the server.");
+            logger.info("Failed to send max score to the server.");
         }
     }
 
@@ -184,7 +186,7 @@ public class MainMenu extends JPanel {
             // 서버로부터 응답 받기
             InputStream responseStream = connection.getInputStream();
             // 응답 데이터를 문자열로 읽어오기
-            String responseData = new String(responseStream.readAllBytes());
+            String responseData = new String(responseStream.readAllBytes(), StandardCharsets.UTF_8);
             responseStream.close();
 
             // JSON 데이터 파싱

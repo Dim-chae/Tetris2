@@ -153,12 +153,12 @@ public class Board extends JPanel implements ActionListener {
 	private boolean canMove(Shape newPiece, int newX, int newY){
 		for (int i = 0; i < 4; ++i) {
 			int x = newX + newPiece.getX(i);
-			int y = newY + newPiece.getY(i); 
-			if ((x < 0) && (y >= 0 || y <= BOARD_HEIGHT))
+			int y = newY + newPiece.getY(i);
+			if (x < 0 && y >= 0 && y <= BOARD_HEIGHT)
 				tryMove(newPiece, newX + 1, newY);
-			if ((x >= BOARD_WIDTH) && (y >= 0 || y <= BOARD_HEIGHT))
+			if (x >= BOARD_WIDTH && y >= 0 && y <= BOARD_HEIGHT)
 				tryMove(newPiece, newX - 1, newY);
-			if (x < 0 || x >= BOARD_WIDTH || y < 0 || y >= BOARD_HEIGHT)
+			if (x < 0 && x >= BOARD_WIDTH || y < 0 || y >= BOARD_HEIGHT)
 				return false;
 			if (tetrisBoard[x][y] != Tetrominoes.NO_SHAPE)
 				return false;
@@ -299,26 +299,7 @@ public class Board extends JPanel implements ActionListener {
 		score += 100 * numFullLines + comboScore;
 	}
 
-	private void holdCurPiece(){
-		Shape tmpPiece;
-		if(isUseHold) return;
 
-		if(holdPiece.getShape() == Tetrominoes.NO_SHAPE){
-			holdPiece = curPiece;
-			createNewPiece();
-		} else {
-			int x = curPiece.getX();
-			int y = curPiece.getY();
-			tmpPiece = curPiece;
-			curPiece = holdPiece;
-			holdPiece = tmpPiece;
-			curPiece.setX(x);
-			curPiece.setY(y);
-		}
-
-		isUseHold = true;
-		repaint();
-	}
 
 	private void makeOneRandomLine(){
 		for(int i = 0; i < BOARD_WIDTH; i++){
@@ -569,6 +550,26 @@ public class Board extends JPanel implements ActionListener {
 	}
 
 	private class TAdapter extends KeyAdapter {
+		private void holdCurPiece(){
+			Shape tmpPiece;
+			if(isUseHold) return;
+
+			if(holdPiece.getShape() == Tetrominoes.NO_SHAPE){
+				holdPiece = curPiece;
+				createNewPiece();
+			} else {
+				int x = curPiece.getX();
+				int y = curPiece.getY();
+				tmpPiece = curPiece;
+				curPiece = holdPiece;
+				holdPiece = tmpPiece;
+				curPiece.setX(x);
+				curPiece.setY(y);
+			}
+
+			isUseHold = true;
+			repaint();
+		}
 		@Override
 		public void keyPressed(KeyEvent e) {
 			int keycode = e.getKeyCode();
