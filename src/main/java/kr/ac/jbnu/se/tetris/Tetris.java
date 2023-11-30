@@ -5,7 +5,7 @@ import javax.swing.*;
 
 public class Tetris extends JFrame {
     
-    private transient Player player = new Player("", 0, 1, 0);
+    private final transient Player player = new Player("", 0, 1, 0);
     private int bgmVolume = 100;
 
     public Tetris() {
@@ -15,7 +15,7 @@ public class Tetris extends JFrame {
         setLayout(new BorderLayout());
         setLocationRelativeTo(null);
         setResizable(false);
-        add(new MainMenu(this));
+        add(new LoginPanel(this));
     }
 
     public void setUserId(String userId) {

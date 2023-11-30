@@ -10,18 +10,15 @@ import java.awt.event.KeyEvent;
 import java.util.Random;
 
 public class Board extends JPanel implements ActionListener {
-	protected Tetris tetris;
+	protected final Tetris tetris;
 
 	private static final int BOARD_WIDTH = 10;
 	private static final int BOARD_HEIGHT = 20;
 	private static final int SQUARE_SIZE = 20;
 	private static final Font GAME_FONT = new Font("맑은 고딕", Font.BOLD, 13);
-
-	private transient Bgm bgm;
-	private transient Shape curPiece;
-	protected transient Shape nextPiece;
-	protected transient Shape holdPiece = new Shape();
-
+	private final String modeName;
+	private final Random random = new Random();
+	private final Tetrominoes[][] tetrisBoard = new Tetrominoes[BOARD_WIDTH][BOARD_HEIGHT];
 	private final JPanel rightPanel = new JPanel();
 	private final JPanel nextPiecePanel = new JPanel();
 	private final JPanel holdPiecePanel = new JPanel();
@@ -34,8 +31,16 @@ public class Board extends JPanel implements ActionListener {
 	private final JButton restartButton = new JButton("Restart");
 	private final JButton mainMenuButton = new JButton("Main Menu");
 	private final JButton helpButton = new JButton("Help");
-	private final Random random = new Random();
-
+	protected final JLabel scoreLabel = new JLabel("Score : 0");
+	private final JLabel statusLabel = new JLabel();
+	protected final JLabel comboLabel = new JLabel("Combo : 0");
+	private final JLabel pauseLabel = new JLabel("Pause");
+	protected final JLabel nextPieceLabel = new JLabel();
+	protected final JLabel holdPieceLabel = new JLabel();
+	private transient Bgm bgm;
+	private transient Shape curPiece;
+	protected transient Shape nextPiece;
+	protected transient Shape holdPiece = new Shape();
 	private Timer timer;
 	private Timer lineTimer;
 	private int combo = 0;
@@ -45,15 +50,7 @@ public class Board extends JPanel implements ActionListener {
 	private boolean isFallingFinished = false;
 	protected boolean isPaused = false;
 	private boolean isUseHold = false;
-	private final String modeName;
-	private final Tetrominoes[][] tetrisBoard = new Tetrominoes[BOARD_WIDTH][BOARD_HEIGHT];
-	protected JLabel scoreLabel = new JLabel("Score : " + score);
-	private final JLabel statusLabel = new JLabel();
-	protected JLabel comboLabel = new JLabel("Combo : " + combo);
-	private final JLabel pauseLabel = new JLabel("Pause");
-	protected JLabel nextPieceLabel = new JLabel();
-	protected JLabel holdPieceLabel = new JLabel();
-
+	
 	public Board(Tetris tetris, String modeName) {
 		this.tetris = tetris;
 		this.modeName = modeName;
@@ -538,7 +535,7 @@ public class Board extends JPanel implements ActionListener {
 
             [아이템 설명 : 폭탄]
             I 버튼이나 폭탄 아이콘을 누르면 아이템을 사용할 수 있습니다.
-            사용 시 해당 시점에 쌓인 블록의 수만큼 점수가 100점씩 추가됩니다.
+            사용 시 해당 시점에 쌓인 블록의 수만큼 점수가 10점씩 추가됩니다.
             레벨이 1 올라갈 때마다 아이템을 1개씩 얻을 수 있습니다.
 
             [단축키]
