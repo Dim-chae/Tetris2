@@ -590,29 +590,26 @@ public class Board extends JPanel implements ActionListener {
 
 			if (isPaused) return;
 
-			switch (keycode) {
-			case KeyEvent.VK_LEFT:
-                tryMove(curPiece, curPiece.getX() - 1, curPiece.getY());
-				break;
-            case KeyEvent.VK_RIGHT:
-                tryMove(curPiece, curPiece.getX() + 1, curPiece.getY());
-                break;
-            case KeyEvent.VK_DOWN:
-                tryMove(curPiece, curPiece.getX(), curPiece.getY() + 1);
-                break;
-            case KeyEvent.VK_UP:
-                tryMove(curPiece.rotateRight(), curPiece.getX(), curPiece.getY());
-                break;
-            case KeyEvent.VK_SPACE:
-                hardDrop();
-                break;
-            case 'c', 'C':
+			if (keycode == KeySettingMenu.moveLeftKey.get()){
+				tryMove(curPiece, curPiece.getX() - 1, curPiece.getY());
+			}
+			if (keycode == KeySettingMenu.moveRightKey.get()){
+				tryMove(curPiece, curPiece.getX() + 1, curPiece.getY());
+			}
+			if (keycode == KeySettingMenu.softDropKey.get()){
+				tryMove(curPiece, curPiece.getX() + 1, curPiece.getY());
+			}
+			if (keycode == KeySettingMenu.rotateRightKey.get()){
+				tryMove(curPiece.rotateRight(), curPiece.getX(), curPiece.getY());
+			}
+			if (keycode == KeySettingMenu.hardDropKey.get()){
+				hardDrop();
+			}
+			if (keycode == KeySettingMenu.holdBlockKey.get()){
 				holdCurPiece();
-                break;
-			case 'i', 'I':
+			}
+			if (keycode == KeySettingMenu.useItemKey.get()) {
 				useItem();
-				break;
-			default:
 			}
 		}
 	}
