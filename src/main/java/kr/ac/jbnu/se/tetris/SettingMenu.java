@@ -2,6 +2,8 @@ package kr.ac.jbnu.se.tetris;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.SwingConstants;
 
 public class SettingMenu extends JPanel {
@@ -13,10 +15,11 @@ public class SettingMenu extends JPanel {
     public SettingMenu(Tetris tetris) {
         this.tetris = tetris;
         addVolumeSlider();
-        addSaveButton();
+        addKeySettingButton();
         addLogoutButton();
+        addSaveButton();
 
-        mainPanel.setLayout(new GridLayout(4, 1));
+        mainPanel.setLayout(new GridLayout(5, 1));
         add(mainPanel);
     }
 
@@ -48,6 +51,13 @@ public class SettingMenu extends JPanel {
         logoutButton.setPreferredSize(new Dimension(200, 50));
         logoutButton.addActionListener(e -> tetris.switchPanel(new LoginPanel(tetris)));
         mainPanel.add(setStyledButton(logoutButton));
+    }
+
+    private void addKeySettingButton(){
+        JButton keySettingButton = new JButton("조작키 설정");
+        keySettingButton.setPreferredSize(new Dimension(200, 50));
+        keySettingButton.addActionListener(e -> tetris.switchPanel(new KeySettingMenu(tetris)));
+        mainPanel.add(setStyledButton(keySettingButton));
     }
 
     private JButton setStyledButton(JButton button){
