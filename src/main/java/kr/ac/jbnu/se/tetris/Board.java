@@ -585,7 +585,29 @@ public class Board extends JPanel implements ActionListener {
 
 			if (isPaused) return;
 
-			switch (keycode) {
+			if (keycode == KeySettingMenu.moveLeftKey.get()){
+				tryMove(curPiece, curPiece.getX() - 1, curPiece.getY());
+			}
+			if (keycode == KeySettingMenu.moveRightKey.get()){
+				tryMove(curPiece, curPiece.getX() + 1, curPiece.getY());
+			}
+			if (keycode == KeySettingMenu.softDropKey.get()){
+				tryMove(curPiece, curPiece.getX() + 1, curPiece.getY());
+			}
+			if (keycode == KeySettingMenu.rotateRightKey.get()){
+				tryMove(curPiece.rotateRight(), curPiece.getX(), curPiece.getY());
+			}
+			if (keycode == KeySettingMenu.hardDropKey.get()){
+				hardDrop();
+			}
+			if (keycode == KeySettingMenu.holdBlockKey.get()){
+				holdCurPiece();
+			}
+			if (keycode == KeySettingMenu.useItemKey.get()) {
+				useItem();
+			}
+
+			/*switch (keycode) {
 			case KeyEvent.VK_LEFT:
                 tryMove(curPiece, curPiece.getX() - 1, curPiece.getY());
 				break;
@@ -608,7 +630,7 @@ public class Board extends JPanel implements ActionListener {
 				useItem();
 				break;
 			default:
-			}
+			}*/
 		}
 	}
 }
