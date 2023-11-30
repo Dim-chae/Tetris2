@@ -1,23 +1,24 @@
 package kr.ac.jbnu.se.tetris;
 
-import java.awt.*;
-import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.util.Random;
 
 public class Board extends JPanel implements ActionListener {
-	protected Tetris tetris;
+	protected final Tetris tetris;
 
 	private static final int BOARD_WIDTH = 10;
 	private static final int BOARD_HEIGHT = 20;
 	private static final int SQUARE_SIZE = 20;
 	private static final Font GAME_FONT = new Font("맑은 고딕", Font.BOLD, 13);
-
-	private transient Bgm bgm;
-	private transient Shape curPiece;
-	protected transient Shape nextPiece;
-	protected transient Shape holdPiece = new Shape();
-
+	private final String modeName;
+	private final Random random = new Random();
+	private final Tetrominoes[][] tetrisBoard = new Tetrominoes[BOARD_WIDTH][BOARD_HEIGHT];
 	private final JPanel rightPanel = new JPanel();
 	private final JPanel nextPiecePanel = new JPanel();
 	private final JPanel holdPiecePanel = new JPanel();
@@ -30,7 +31,16 @@ public class Board extends JPanel implements ActionListener {
 	private final JButton restartButton = new JButton("Restart");
 	private final JButton mainMenuButton = new JButton("Main Menu");
 	private final JButton helpButton = new JButton("Help");
-
+	protected final JLabel scoreLabel = new JLabel("Score : 0");
+	private final JLabel statusLabel = new JLabel();
+	protected final JLabel comboLabel = new JLabel("Combo : 0");
+	private final JLabel pauseLabel = new JLabel("Pause");
+	protected final JLabel nextPieceLabel = new JLabel();
+	protected final JLabel holdPieceLabel = new JLabel();
+	private transient Bgm bgm;
+	private transient Shape curPiece;
+	protected transient Shape nextPiece;
+	protected transient Shape holdPiece = new Shape();
 	private Timer timer;
 	private Timer lineTimer;
 	private int combo = 0;
@@ -40,15 +50,7 @@ public class Board extends JPanel implements ActionListener {
 	private boolean isFallingFinished = false;
 	protected boolean isPaused = false;
 	private boolean isUseHold = false;
-	private final String modeName;
-	private final Tetrominoes[][] tetrisBoard = new Tetrominoes[BOARD_WIDTH][BOARD_HEIGHT];
-	protected JLabel scoreLabel = new JLabel("Score : " + score);
-	private final JLabel statusLabel = new JLabel();
-	protected JLabel comboLabel = new JLabel("Combo : " + combo);
-	private final JLabel pauseLabel = new JLabel("Pause");
-	protected JLabel nextPieceLabel = new JLabel();
-	protected JLabel holdPieceLabel = new JLabel();
-
+	
 	public Board(Tetris tetris, String modeName) {
 		this.tetris = tetris;
 		this.modeName = modeName;
@@ -312,6 +314,9 @@ public class Board extends JPanel implements ActionListener {
 			tetrisBoard[i][BOARD_HEIGHT - 1] = Tetrominoes.ONE_BLOCK_SHAPE;
 		}
 
+		int randomNumber = random.nextInt(BOARD_WIDTH);
+		tetrisBoard[randomNumber][BOARD_HEIGHT - 1] = Tetrominoes.NO_SHAPE;
+
 		repaint();
 	}
 
@@ -334,7 +339,7 @@ public class Board extends JPanel implements ActionListener {
 		updateScorePanel();
     }
 
-	protected void drawPiece(Graphics g){
+	private void drawPiece(Graphics g){
         if(curPiece.getShape() == Tetrominoes.NO_SHAPE){
 			return;
 		}
@@ -345,7 +350,7 @@ public class Board extends JPanel implements ActionListener {
 		}
     }
 
-	protected void drawBoard(Graphics g){
+	private void drawBoard(Graphics g){
         for(int i = 0; i < BOARD_WIDTH; i++){
             for(int j = 0; j < BOARD_HEIGHT; j++){
                 drawSquare(g, i * SQUARE_SIZE, j * SQUARE_SIZE, tetrisBoard[i][j].getShape());
@@ -353,7 +358,7 @@ public class Board extends JPanel implements ActionListener {
         }
     }
 
-	protected void drawGhost(Graphics g){
+	private void drawGhost(Graphics g){
 		int curX = curPiece.getX();
         int newY = curPiece.getY();
 		g.setColor(Color.GRAY);
@@ -370,7 +375,7 @@ public class Board extends JPanel implements ActionListener {
 		}
 	}
 
-	protected void drawGridPattern(Graphics g){
+	private void drawGridPattern(Graphics g){
 		g.setColor(Color.WHITE);
 		for(int i = 0; i <= BOARD_WIDTH; i++){
 			g.drawLine(i * SQUARE_SIZE, 0, i * SQUARE_SIZE, BOARD_HEIGHT * SQUARE_SIZE);
@@ -395,7 +400,7 @@ public class Board extends JPanel implements ActionListener {
 		g.drawLine(x + SQUARE_SIZE - 1, y + SQUARE_SIZE - 1, x + SQUARE_SIZE - 1, y + 1);
 	}
 
-	protected void drawBackgroundImage(Graphics g){
+	private void drawBackgroundImage(Graphics g){
 		g.drawImage(backGroundImage.getImage(), 0, 0, null);
 	}
 
@@ -534,7 +539,7 @@ public class Board extends JPanel implements ActionListener {
 
             [아이템 설명 : 폭탄]
             I 버튼이나 폭탄 아이콘을 누르면 아이템을 사용할 수 있습니다.
-            사용 시 해당 시점에 쌓인 블록의 수만큼 점수가 100점씩 추가됩니다.
+            사용 시 해당 시점에 쌓인 블록의 수만큼 점수가 10점씩 추가됩니다.
             레벨이 1 올라갈 때마다 아이템을 1개씩 얻을 수 있습니다.
 
             [단축키]
@@ -606,31 +611,6 @@ public class Board extends JPanel implements ActionListener {
 			if (keycode == KeySettingMenu.useItemKey.get()) {
 				useItem();
 			}
-
-			/*switch (keycode) {
-			case KeyEvent.VK_LEFT:
-                tryMove(curPiece, curPiece.getX() - 1, curPiece.getY());
-				break;
-            case KeyEvent.VK_RIGHT:
-                tryMove(curPiece, curPiece.getX() + 1, curPiece.getY());
-                break;
-            case KeyEvent.VK_DOWN:
-                tryMove(curPiece, curPiece.getX(), curPiece.getY() + 1);
-                break;
-            case KeyEvent.VK_UP:
-                tryMove(curPiece.rotateRight(), curPiece.getX(), curPiece.getY());
-                break;
-            case KeyEvent.VK_SPACE:
-                hardDrop();
-                break;
-            case 'c', 'C':
-				holdCurPiece();
-                break;
-			case 'i', 'I':
-				useItem();
-				break;
-			default:
-			}*/
 		}
 	}
 }

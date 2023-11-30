@@ -13,11 +13,6 @@ public class KeySettingMenu extends JPanel {
     public static AtomicInteger hardDropKey = new AtomicInteger(KeyEvent.VK_SPACE);
     public static AtomicInteger holdBlockKey = new AtomicInteger(KeyEvent.VK_C);
     public static AtomicInteger useItemKey = new AtomicInteger(KeyEvent.VK_I);
-
-
-
-
-
     private JLabel key1, key2, key3, key4, key5, key6, key7;
     private JButton btn1, btn2, btn3, btn4, btn5, btn6, btn7;
     private  JButton previousButton = null;

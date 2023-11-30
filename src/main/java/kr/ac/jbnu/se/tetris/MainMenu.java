@@ -10,25 +10,24 @@ import java.nio.charset.StandardCharsets;
 import java.util.logging.Logger;
 
 public class MainMenu extends JPanel {
-    transient Logger logger = Logger.getLogger(getClass().getName());
-    private final Tetris tetris;
     private static final String MAIN_FONT_NAME = "맑은 고딕";
+    private final transient Logger logger = Logger.getLogger(getClass().getName());
+    private final Tetris tetris;
     private final JPanel topPanel = new JPanel(new BorderLayout());
     private final JPanel centerPanel = new JPanel(new GridLayout(4, 1, 10, 10));
     private final JPanel bottomPanel = new JPanel(new FlowLayout());
     private final JLabel title = new JLabel("테트리스", SwingConstants.CENTER);
     private final JButton normalModeButton = new JButton("기본 모드");
     private final JButton sprintButton = new JButton("스프린트 모드");
-    private final JButton timeattackButton = new JButton("타임어택 모드");
+    private final JButton timeAttackButton = new JButton("타임어택 모드");
     private final JButton ghostModeButton = new JButton("고스트 모드");
     private final JButton achievementButton = new JButton("업적");
     private final JButton rankingButton = new JButton("랭킹");
     private final JButton settingButton = new JButton("설정");
     private final JPopupMenu difficultyPopupMenu = new JPopupMenu();
-
-    private String userId;
-    private int userMaxScore;
-    private int userLevel;
+    private final String userId;
+    private final int userMaxScore;
+    private final int userLevel;
 
     public MainMenu(Tetris tetris) {
         this.tetris = tetris;
@@ -43,7 +42,6 @@ public class MainMenu extends JPanel {
     // UI 초기화
     private void initUI(){
         setLayout(new FlowLayout());
-        setBackground(Color.WHITE);
 
         addTopPanel();
         addCenterPanel();
@@ -53,7 +51,6 @@ public class MainMenu extends JPanel {
     // 상단 패널에 제목과 사용자 정보 추가
     private void addTopPanel(){
         JLabel profileLabel;
-        topPanel.setBackground(Color.WHITE);
         topPanel.setBorder(BorderFactory.createEmptyBorder(0, 50, 10, 50));
 
         title.setFont(new Font(MAIN_FONT_NAME, Font.BOLD, 32));
@@ -69,23 +66,22 @@ public class MainMenu extends JPanel {
     private void addCenterPanel(){
         // 기본 모드 버튼
         normalModeButton.addActionListener(e -> showDifficultyPopupMenu());
-        centerPanel.add(setStyledButton(normalModeButton, 200, 40));
+        centerPanel.add(setStyledButton(normalModeButton, 200, 45));
 
         // 스프린트 모드 버튼
         sprintButton.addActionListener(e -> tetris.switchPanel(new SprintMode(tetris)));
-        centerPanel.add(setStyledButton(sprintButton, 200, 40));
+        centerPanel.add(setStyledButton(sprintButton, 200, 45));
         
 
         // 타임어택 모드 버튼
-        timeattackButton.addActionListener(e -> tetris.switchPanel(new TimeAttackMode(tetris)));
-        centerPanel.add(setStyledButton(timeattackButton, 200, 40));
+        timeAttackButton.addActionListener(e -> tetris.switchPanel(new TimeAttackMode(tetris)));
+        centerPanel.add(setStyledButton(timeAttackButton, 200, 45));
         
         // 고스트 모드 버튼
         ghostModeButton.addActionListener(e -> tetris.switchPanel(new GhostMode(tetris)));
-        centerPanel.add(setStyledButton(ghostModeButton, 200, 40));
+        centerPanel.add(setStyledButton(ghostModeButton, 200, 45));
 
         // 중앙 패널 설정
-        centerPanel.setBackground(Color.WHITE);
         centerPanel.setBorder(BorderFactory.createTitledBorder("게임 모드"));
         centerPanel.setPreferredSize(new Dimension(250, 200));
         add(centerPanel, BorderLayout.CENTER);
@@ -116,7 +112,6 @@ public class MainMenu extends JPanel {
         bottomPanel.add(setStyledButton(settingButton, 75, 40));
 
         // 하단 패널에 버튼 추가
-        bottomPanel.setBackground(Color.WHITE);
         bottomPanel.setPreferredSize(new Dimension(350, 60));
         add(bottomPanel, BorderLayout.SOUTH);
     }
