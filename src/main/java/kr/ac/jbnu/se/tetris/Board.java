@@ -156,6 +156,10 @@ public class Board extends JPanel implements ActionListener {
 		for (int i = 0; i < 4; ++i) {
 			int x = newX + newPiece.getX(i);
 			int y = newY + newPiece.getY(i);
+			if ((x < 0) && (y >= 0 || y <= BOARD_HEIGHT))
+				tryMove(newPiece, newX + 1, newY);
+			if ((x >= BOARD_WIDTH) && (y >= 0 || y <= BOARD_HEIGHT))
+				tryMove(newPiece, newX - 1, newY);
 			if (x < 0 || x >= BOARD_WIDTH || y < 0 || y >= BOARD_HEIGHT)
 				return false;
 			if (tetrisBoard[x][y] != Tetrominoes.NO_SHAPE)
