@@ -1,9 +1,13 @@
 package kr.ac.jbnu.se.tetris;
 
-import java.awt.*;
-import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.util.Random;
 
 public class Board extends JPanel implements ActionListener {
 	protected Tetris tetris;
@@ -30,6 +34,7 @@ public class Board extends JPanel implements ActionListener {
 	private final JButton restartButton = new JButton("Restart");
 	private final JButton mainMenuButton = new JButton("Main Menu");
 	private final JButton helpButton = new JButton("Help");
+	private final Random random = new Random();
 
 	private Timer timer;
 	private Timer lineTimer;
@@ -312,6 +317,9 @@ public class Board extends JPanel implements ActionListener {
 			tetrisBoard[i][BOARD_HEIGHT - 1] = Tetrominoes.ONE_BLOCK_SHAPE;
 		}
 
+		int randomNumber = random.nextInt(BOARD_WIDTH);
+		tetrisBoard[randomNumber][BOARD_HEIGHT - 1] = Tetrominoes.NO_SHAPE;
+
 		repaint();
 	}
 
@@ -334,7 +342,7 @@ public class Board extends JPanel implements ActionListener {
 		updateScorePanel();
     }
 
-	protected void drawPiece(Graphics g){
+	private void drawPiece(Graphics g){
         if(curPiece.getShape() == Tetrominoes.NO_SHAPE){
 			return;
 		}
@@ -345,7 +353,7 @@ public class Board extends JPanel implements ActionListener {
 		}
     }
 
-	protected void drawBoard(Graphics g){
+	private void drawBoard(Graphics g){
         for(int i = 0; i < BOARD_WIDTH; i++){
             for(int j = 0; j < BOARD_HEIGHT; j++){
                 drawSquare(g, i * SQUARE_SIZE, j * SQUARE_SIZE, tetrisBoard[i][j].getShape());
@@ -353,7 +361,7 @@ public class Board extends JPanel implements ActionListener {
         }
     }
 
-	protected void drawGhost(Graphics g){
+	private void drawGhost(Graphics g){
 		int curX = curPiece.getX();
         int newY = curPiece.getY();
 		g.setColor(Color.GRAY);
@@ -370,7 +378,7 @@ public class Board extends JPanel implements ActionListener {
 		}
 	}
 
-	protected void drawGridPattern(Graphics g){
+	private void drawGridPattern(Graphics g){
 		g.setColor(Color.WHITE);
 		for(int i = 0; i <= BOARD_WIDTH; i++){
 			g.drawLine(i * SQUARE_SIZE, 0, i * SQUARE_SIZE, BOARD_HEIGHT * SQUARE_SIZE);
@@ -395,7 +403,7 @@ public class Board extends JPanel implements ActionListener {
 		g.drawLine(x + SQUARE_SIZE - 1, y + SQUARE_SIZE - 1, x + SQUARE_SIZE - 1, y + 1);
 	}
 
-	protected void drawBackgroundImage(Graphics g){
+	private void drawBackgroundImage(Graphics g){
 		g.drawImage(backGroundImage.getImage(), 0, 0, null);
 	}
 
