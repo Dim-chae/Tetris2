@@ -1,6 +1,7 @@
 package kr.ac.jbnu.se.tetris;
 
 import java.awt.*;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -56,7 +57,7 @@ public class SignUpPanel extends JPanel{
             JOptionPane.showMessageDialog(null, "ID를 입력해주세요.", "ID 중복 확인 실패", JOptionPane.ERROR_MESSAGE);
         } else {
             boolean isDuplicate = checkDuplicateIdOnServer(id);
-    
+
             if (isDuplicate) {
                 JOptionPane.showMessageDialog(null, "이미 사용 중인 ID입니다.", "ID 중복 확인 실패", JOptionPane.ERROR_MESSAGE);
             } else {
@@ -78,7 +79,7 @@ public class SignUpPanel extends JPanel{
             // 회원가입 성공
             // 여기에서 서버로 회원가입 정보를 전송하고 응답을 처리해야 합니다.
             boolean registrationSuccess = sendRegistrationInfoToServer(id, new String(pw));
-            
+
             if (registrationSuccess) {
                 JOptionPane.showMessageDialog(null, "회원가입에 성공했습니다.", "회원가입 성공", JOptionPane.INFORMATION_MESSAGE);
                 showLoginPanel();
@@ -92,19 +93,7 @@ public class SignUpPanel extends JPanel{
     private boolean sendRegistrationInfoToServer(String id, String password) {
         try {
             URL url = new URL("http://localhost:3000/signup"); // 백엔드 서버의 회원가입 엔드포인트 URL로 수정
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-
-            connection.setRequestMethod("POST");
-            connection.setRequestProperty("Content-Type", "application/json");
-            connection.setDoOutput(true);
-
-            // 회원가입 정보를 JSON 형식으로 전송
-            String jsonInputString = "{\"id\": \"" + id + "\", \"password\": \"" + password + "\"}";
-            byte[] input = jsonInputString.getBytes(StandardCharsets.UTF_8);
-
-            try (OutputStream os = connection.getOutputStream()) {
-                os.write(input, 0, input.length);
-            }
+            HttpURLConnection connection = getHttpURLConnection(id, password, url);
 
             // 응답 코드 확인
             int responseCode = connection.getResponseCode();
@@ -117,24 +106,28 @@ public class SignUpPanel extends JPanel{
 
         return false; // 회원가입 실패
     }
-    
+
+    private static HttpURLConnection getHttpURLConnection(String id, String password, URL url) throws IOException {
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+        connection.setRequestMethod("POST");
+        connection.setRequestProperty("Content-Type", "application/json");
+        connection.setDoOutput(true);
+
+        // 회원가입 정보를 JSON 형식으로 전송
+        String jsonInputString = "{\"id\": \"" + id + "\", \"password\": \"" + password + "\"}";
+        byte[] input = jsonInputString.getBytes(StandardCharsets.UTF_8);
+
+        try (OutputStream os = connection.getOutputStream()) {
+            os.write(input, 0, input.length);
+        }
+        return connection;
+    }
+
     // 서버에서 ID 중복을 확인하는 함수
     private boolean checkDuplicateIdOnServer(String id) {
         try {
-            URL url = new URL("http://localhost:3000/checkDuplicate"); // 백엔드 서버의 중복 확인 엔드포인트 URL로 수정
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-
-            connection.setRequestMethod("POST");
-            connection.setRequestProperty("Content-Type", "application/json");
-            connection.setDoOutput(true);
-
-            // ID를 JSON 형식으로 전송
-            String jsonInputString = "{\"id\": \"" + id + "\"}";
-            byte[] input = jsonInputString.getBytes(StandardCharsets.UTF_8);
-
-            try (OutputStream os = connection.getOutputStream()) {
-                os.write(input, 0, input.length);
-            }
+            HttpURLConnection connection = getHttpURLConnection(id);
 
             // 응답 코드 확인
             int responseCode = connection.getResponseCode();
@@ -150,6 +143,24 @@ public class SignUpPanel extends JPanel{
         }
 
         return false;
+    }
+
+    private static HttpURLConnection getHttpURLConnection(String id) throws IOException {
+        URL url = new URL("http://localhost:3000/checkDuplicate"); // 백엔드 서버의 중복 확인 엔드포인트 URL로 수정
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+        connection.setRequestMethod("POST");
+        connection.setRequestProperty("Content-Type", "application/json");
+        connection.setDoOutput(true);
+
+        // ID를 JSON 형식으로 전송
+        String jsonInputString = "{\"id\": \"" + id + "\"}";
+        byte[] input = jsonInputString.getBytes(StandardCharsets.UTF_8);
+
+        try (OutputStream os = connection.getOutputStream()) {
+            os.write(input, 0, input.length);
+        }
+        return connection;
     }
 
     // 로그인 패널 표시

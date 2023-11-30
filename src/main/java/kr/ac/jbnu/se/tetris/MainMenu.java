@@ -147,18 +147,7 @@ public class MainMenu extends JPanel {
         try {
             URL url = new URL("http://localhost:3000/score"); // Update with your server's endpoint URL
 
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("POST");
-            connection.setRequestProperty("Content-Type", "application/json");
-            connection.setDoOutput(true);
-
-            // JSON format for the request body
-            String jsonInputString = "{ \"user_id\": \"" + userId + "\", \"score\": " + maxScore + " }";
-            byte[] input = jsonInputString.getBytes(StandardCharsets.UTF_8);
-
-            try (OutputStream os = connection.getOutputStream()) {
-                os.write(input, 0, input.length);
-            }
+            HttpURLConnection connection = getHttpURLConnection(userId, maxScore, url);
 
             // Response code verification
             int responseCode = connection.getResponseCode();
@@ -171,22 +160,27 @@ public class MainMenu extends JPanel {
 
         return false; // Score sending failed
     }
-    
+
+    private static HttpURLConnection getHttpURLConnection(String userId, int maxScore, URL url) throws IOException {
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestMethod("POST");
+        connection.setRequestProperty("Content-Type", "application/json");
+        connection.setDoOutput(true);
+
+        // JSON format for the request body
+        String jsonInputString = "{ \"user_id\": \"" + userId + "\", \"score\": " + maxScore + " }";
+        byte[] input = jsonInputString.getBytes(StandardCharsets.UTF_8);
+
+        try (OutputStream os = connection.getOutputStream()) {
+            os.write(input, 0, input.length);
+        }
+        return connection;
+    }
+
     // 서버로부터 최고 점수를 가져오는 메소드
     private int getMaxScoreFromServer(String userId) {
         try {
-            URL url = new URL("http://localhost:3000/showPanelMaxScore?user_id=" + userId); // 서버의 엔드포인트 URL로 업데이트
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("GET");
-
-            // 서버로부터 응답 받기
-            InputStream responseStream = connection.getInputStream();
-            // 응답 데이터를 문자열로 읽어오기
-            String responseData = new String(responseStream.readAllBytes(), StandardCharsets.UTF_8);
-            responseStream.close();
-
-            // JSON 데이터 파싱
-            JSONObject jsonResponse = new JSONObject(responseData);
+            JSONObject jsonResponse = getJsonObject(userId);
 
             // 최고 점수 추출
             return jsonResponse.getInt("max_score");
@@ -200,5 +194,20 @@ public class MainMenu extends JPanel {
         }
 
         return 0; // 요청 실패 시 기본값 반환
+    }
+
+    private static JSONObject getJsonObject(String userId) throws IOException {
+        URL url = new URL("http://localhost:3000/showPanelMaxScore?user_id=" + userId); // 서버의 엔드포인트 URL로 업데이트
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestMethod("GET");
+
+        // 서버로부터 응답 받기
+        InputStream responseStream = connection.getInputStream();
+        // 응답 데이터를 문자열로 읽어오기
+        String responseData = new String(responseStream.readAllBytes(), StandardCharsets.UTF_8);
+        responseStream.close();
+
+        // JSON 데이터 파싱
+        return new JSONObject(responseData);
     }
 }
