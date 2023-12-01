@@ -7,10 +7,12 @@ public class Tetris extends JFrame  {
     
     private final transient Player player = new Player("", 0, 1, 0);
     private int bgmVolume = 100;
-
+    private String currentGameMode;
+    
     public Tetris() {
         setSize(400, 450);
         setTitle("Tetris");
+        currentGameMode = "Easy";
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
         setLocationRelativeTo(null);
@@ -62,9 +64,16 @@ public class Tetris extends JFrame  {
     public int getBgmVolume() {
         return bgmVolume;
     }
+    public String getCurrentGameMode() {
+        return currentGameMode;
+    }
 
+    public void setCurrentGameMode(String mode) {
+        currentGameMode = mode;
+    }
     public static void main(String[] args) {
         Tetris tetris = new Tetris();
         tetris.setVisible(true);
     }
+    
 }

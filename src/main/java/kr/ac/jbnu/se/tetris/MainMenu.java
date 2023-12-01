@@ -1,5 +1,6 @@
 package kr.ac.jbnu.se.tetris;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import javax.swing.*;
 import java.awt.*;
@@ -29,12 +30,14 @@ public class MainMenu extends JPanel {
     private final String userId;
     private final int userMaxScore;
     private final int userLevel;
+    private String currentGameMode;
 
     public MainMenu(Tetris tetris) {
         this.tetris = tetris;
         this.userId = tetris.getUserId();
         this.userMaxScore = getMaxScoreFromServer(userId);
         this.userLevel = tetris.getUserLevel();
+        this.currentGameMode = tetris.getCurrentGameMode(); // 초기화
 
         initUI();
         sendUserMaxScoreToServer();
@@ -94,6 +97,8 @@ public class MainMenu extends JPanel {
         for(String diff : difficulty){
             JMenuItem menuItem = new JMenuItem(diff);
             menuItem.addActionListener(e -> tetris.switchPanel(new Board(tetris, diff)));
+            currentGameMode = diff; // 선택된 모드를 설정
+            tetris.setCurrentGameMode(diff); // Tetris 인스턴스에도 설정
             difficultyPopupMenu.add(menuItem);
         }
         difficultyPopupMenu.show(normalModeButton, normalModeButton.getWidth() / 2, normalModeButton.getHeight());
@@ -105,7 +110,7 @@ public class MainMenu extends JPanel {
         bottomPanel.add(setStyledButton(achievementButton, 75, 40));
         
         // 랭킹 버튼
-        rankingButton.addActionListener(e -> tetris.switchPanel(new Ranking(tetris)));
+        rankingButton.addActionListener(e -> tetris.switchPanel(new ModeSelection(tetris)));
         bottomPanel.add(setStyledButton(rankingButton, 75, 40));
 
         // 설정 버튼
@@ -133,7 +138,7 @@ public class MainMenu extends JPanel {
         int maxScore = tetris.getUserMaxScore();
 
         // Use the existing sendScoreToServer method to send the user's max score
-        boolean scoreSent = sendScoreToServer(id, maxScore);
+        boolean scoreSent = sendScoreToServer(id, maxScore,currentGameMode);
 
         if (scoreSent) {
             logger.info("Max score sent to the server successfully.");
@@ -143,11 +148,24 @@ public class MainMenu extends JPanel {
     }
 
     // Existing method to send the score to the server
-    private boolean sendScoreToServer(String userId, int maxScore) {
+    private boolean sendScoreToServer(String userId, int maxScore, String currentGameMode) {
         try {
             URL url = new URL("http://localhost:3000/score"); // Update with your server's endpoint URL
 
-            HttpURLConnection connection = getHttpURLConnection(userId, maxScore, url);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("POST");
+            connection.setRequestProperty("Content-Type", "application/json");
+            connection.setDoOutput(true);
+
+            // JSON format for the request body with game mode
+            // 클라이언트에서 score 엔드포인트 호출 시 mode 정보도 함께 보내기
+            String jsonInputString = "{ \"user_id\": \"" + userId + "\", \"score\": " + maxScore + ", \"mode\": \"" + currentGameMode + "\" }";
+
+            byte[] input = jsonInputString.getBytes(StandardCharsets.UTF_8);
+
+            try (OutputStream os = connection.getOutputStream()) {
+                os.write(input, 0, input.length);
+            }
 
             // Response code verification
             int responseCode = connection.getResponseCode();
@@ -155,7 +173,7 @@ public class MainMenu extends JPanel {
                 return true; // Score sent successfully
             }
         } catch (Exception ex) {
-            logger.log(Level.SEVERE, "스코어 전송 중 에러 발생", ex);
+            ex.printStackTrace();
         }
 
         return false; // Score sending failed
@@ -196,7 +214,7 @@ public class MainMenu extends JPanel {
         return 0; // 요청 실패 시 기본값 반환
     }
 
-    private static JSONObject getJsonObject(String userId) throws IOException {
+    private static JSONObject getJsonObject(String userId) throws IOException, JSONException {
         URL url = new URL("http://localhost:3000/showPanelMaxScore?user_id=" + userId); // 서버의 엔드포인트 URL로 업데이트
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("GET");
