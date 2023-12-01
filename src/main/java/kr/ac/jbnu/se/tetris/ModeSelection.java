@@ -4,16 +4,18 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.logging.Logger;
 
 public class ModeSelection extends JPanel {
     Tetris tetris;
-
+    private static final String FONT_NAME = "맑은 고딕";
+    transient Logger logger = Logger.getLogger(getClass().getName());
     public ModeSelection(Tetris tetris) {
         this.tetris = tetris;
         setLayout(new BorderLayout());
 
         JLabel titleLabel = new JLabel("모드를 선택하세요", SwingConstants.CENTER);
-        titleLabel.setFont(new Font("맑은 고딕", Font.BOLD, 32));
+        titleLabel.setFont(new Font(FONT_NAME, Font.BOLD, 32));
         add(titleLabel, BorderLayout.NORTH);
 
         JPanel centerPanel = new JPanel(new GridLayout(0, 1, 10, 10));
@@ -33,9 +35,9 @@ public class ModeSelection extends JPanel {
         JButton backButton = new JButton("뒤로 가기");
         backButton.setBackground(new Color(70, 130, 180));
         backButton.setForeground(Color.WHITE);
-        backButton.setFont(new Font("맑은 고딕", Font.BOLD, 13));
+        backButton.setFont(new Font(FONT_NAME, Font.BOLD, 13));
         backButton.addActionListener(e -> {
-            System.out.println("뒤로 가기 버튼 선택됨");
+            logger.info("뒤로 가기 버튼 선택됨");
             tetris.switchPanel(new MainMenu(tetris));
         });
         add(backButton, BorderLayout.SOUTH);
@@ -50,7 +52,7 @@ public class ModeSelection extends JPanel {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            System.out.println(selectedMode + " 모드 선택됨");
+            logger.info(String.format("%s 모드 선택됨", selectedMode));
             tetris.switchPanel(new Ranking(tetris, selectedMode));
         }
     }
@@ -59,7 +61,7 @@ public class ModeSelection extends JPanel {
         button.setPreferredSize(new Dimension(width, height));
         button.setBackground(new Color(70, 130, 180));
         button.setForeground(Color.WHITE);
-        button.setFont(new Font("맑은 고딕", Font.BOLD, 13));
+        button.setFont(new Font(FONT_NAME, Font.BOLD, 13));
         button.setFocusPainted(false);
         return button;
     }

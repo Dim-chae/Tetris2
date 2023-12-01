@@ -8,14 +8,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class Ranking extends JPanel {
     Tetris tetris;
-    private List<RankingEntry> rankingList;
+    private transient List<RankingEntry> rankingList;
     private String selectedMode; // 추가된 부분
+    transient Logger logger = Logger.getLogger(getClass().getName());
     
     public Ranking(Tetris tetris, String selectedMode) {
         this.tetris = tetris;
@@ -56,7 +59,7 @@ public class Ranking extends JPanel {
         backButton.setForeground(Color.WHITE);
         backButton.setFont(new Font("맑은 고딕", Font.BOLD, 13));
         backButton.addActionListener(e -> {
-            System.out.println("뒤로 가기 버튼 선택됨");
+            logger.info("뒤로 가기 버튼 선택됨");
             tetris.switchPanel(new MainMenu(tetris));
         });
         add(backButton, BorderLayout.SOUTH);
@@ -71,7 +74,7 @@ public class Ranking extends JPanel {
             // 서버로부터 응답 받기
             InputStream responseStream = connection.getInputStream();
             // 응답 데이터를 문자열로 읽어오기
-            String responseData = new String(responseStream.readAllBytes());
+            String responseData = new String(responseStream.readAllBytes(), StandardCharsets.UTF_8);
             responseStream.close();
 
             // JSON 데이터 파싱
