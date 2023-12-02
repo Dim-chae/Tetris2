@@ -13,16 +13,15 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.logging.Level;
 
 public class Ranking extends JPanel {
     Tetris tetris;
     private transient List<RankingEntry> rankingList;
-    private String selectedMode; // 추가된 부분
     transient Logger logger = Logger.getLogger(getClass().getName());
     
     public Ranking(Tetris tetris, String selectedMode) {
         this.tetris = tetris;
-        this.selectedMode = selectedMode; // 추가된 부분
         setLayout(new BorderLayout());
 
         // 상단 패널
@@ -40,8 +39,8 @@ public class Ranking extends JPanel {
         // 랭킹 정보를 표시
         if (rankingList != null) {
             for (RankingEntry entry : rankingList) {
-                JLabel idLabel = new JLabel("아이디: " + entry.getId());
-                JLabel scoreLabel = new JLabel("최고 점수: " + entry.getScore());
+                JLabel idLabel = new JLabel("아이디: " + entry.id());
+                JLabel scoreLabel = new JLabel("최고 점수: " + entry.score());
                 centerPanel.add(idLabel);
                 centerPanel.add(scoreLabel);
             }
@@ -91,34 +90,19 @@ public class Ranking extends JPanel {
             }
 
             // 최고 기록을 기준으로 랭킹을 정렬
-            rankingList.sort(Comparator.comparingInt(RankingEntry::getScore).reversed());
+            rankingList.sort(Comparator.comparingInt(RankingEntry::score).reversed());
 
         } catch (IOException e) {
             // 서버 통신 오류 처리
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "서버 통신 중 에러 발생", e);
             rankingList = null;
         } catch (Exception ex) {
             // JSON 파싱 오류 처리
-            ex.printStackTrace();
+            logger.log(Level.SEVERE, "JSON 파싱 중 에러 발생", ex);
             rankingList = null;
         }
     }
 
-    private class RankingEntry {
-        private String id;
-        private int score;
-
-        public RankingEntry(String id, int score) {
-            this.id = id;
-            this.score = score;
-        }
-
-        public String getId() {
-            return id;
-        }
-
-        public int getScore() {
-            return score;
-        }
+    private record RankingEntry(String id, int score) {
     }
 }

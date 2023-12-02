@@ -17,7 +17,7 @@ public class Tetris extends JFrame  {
         setLayout(new BorderLayout());
         setLocationRelativeTo(null);
         setResizable(false);
-        add(new LoginPanel(this));
+        add(new MainMenu(this));
     }
 
     public void setUserId(String userId) {
