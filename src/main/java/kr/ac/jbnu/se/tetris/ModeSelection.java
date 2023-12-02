@@ -7,9 +7,9 @@ import java.awt.event.ActionListener;
 import java.util.logging.Logger;
 
 public class ModeSelection extends JPanel {
-    Tetris tetris;
+    final Tetris tetris;
     private static final String FONT_NAME = "맑은 고딕";
-    transient Logger logger = Logger.getLogger(getClass().getName());
+    final transient Logger logger = Logger.getLogger(getClass().getName());
     public ModeSelection(Tetris tetris) {
         this.tetris = tetris;
         setLayout(new BorderLayout());
@@ -26,7 +26,7 @@ public class ModeSelection extends JPanel {
         for (String mode : modes) {
             JButton modeButton = new JButton(mode);
             modeButton.addActionListener(new ModeButtonListener(mode));
-            centerPanel.add(setStyledButton(modeButton, 200, 40));
+            centerPanel.add(setStyledButton(modeButton));
         }
 
         JScrollPane scrollPane = new JScrollPane(centerPanel);
@@ -44,7 +44,7 @@ public class ModeSelection extends JPanel {
     }
 
     private class ModeButtonListener implements ActionListener {
-        private String selectedMode;
+        private final String selectedMode;
 
         public ModeButtonListener(String mode) {
             this.selectedMode = mode;
@@ -57,8 +57,8 @@ public class ModeSelection extends JPanel {
         }
     }
 
-    private JButton setStyledButton(JButton button, int width, int height) {
-        button.setPreferredSize(new Dimension(width, height));
+    private JButton setStyledButton(JButton button) {
+        button.setPreferredSize(new Dimension(200, 40));
         button.setBackground(new Color(70, 130, 180));
         button.setForeground(Color.WHITE);
         button.setFont(new Font(FONT_NAME, Font.BOLD, 13));
