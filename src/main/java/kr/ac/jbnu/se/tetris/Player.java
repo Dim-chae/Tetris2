@@ -1,12 +1,12 @@
 package kr.ac.jbnu.se.tetris;
 
-//현재 플레이어의 정보를 저장하는 클래스
 public class Player {
     private String userId;
     private int maxScore;
     private int level;
     private int exp;
-    
+    private static final int LEVEL_UP_THRESHOLD = 300;
+
     public Player(String userId, int maxScore, int level, int exp) {
         this.userId = userId;
         this.maxScore = maxScore;
@@ -19,11 +19,13 @@ public class Player {
     }
 
     public int getMaxScore() {
-        return this.maxScore;
+        return maxScore;
     }
 
     public void setMaxScore(int score) {
-        if(score > maxScore) this.maxScore = score;
+        if (score > maxScore) {
+            maxScore = score;
+        }
     }
 
     public int getLevel() {
@@ -35,28 +37,8 @@ public class Player {
     }
 
     public void setLevel() {
-        int calcLev = this.exp / 300;
-
-        switch (calcLev) {
-            case 0:
-                this.level = 1;
-                break;
-            case 1:
-                this.level = 2;
-                break;
-            case 2:
-                this.level = 3;
-                break;
-            case 3:
-                this.level = 4;
-                break;
-            case 4:
-                this.level = 5;
-                break;
-            default:
-                this.level = 6;
-                break;
-        }
+        int calcLev = exp / LEVEL_UP_THRESHOLD;
+        level = Math.min(calcLev + 1, 6);
     }
 
     public void addExp(int exp) {

@@ -31,7 +31,8 @@ public class MainMenu extends JPanel {
     private final int userMaxScore;
     private final int userLevel;
     private String currentGameMode;
-
+    private static final String SERVER_URL = "http://localhost:3000";
+    
     public MainMenu(Tetris tetris) {
         this.tetris = tetris;
         this.userId = tetris.getUserId();
@@ -137,20 +138,24 @@ public class MainMenu extends JPanel {
         String id = tetris.getUserId();
         int maxScore = tetris.getUserMaxScore();
 
-        // Use the existing sendScoreToServer method to send the user's max score
-        boolean scoreSent = sendScoreToServer(id, maxScore,currentGameMode);
+        boolean scoreSent = sendScoreToServer(id, maxScore, currentGameMode);
 
+        logScoreSendingResult(scoreSent);
+    }
+
+    private void logScoreSendingResult(boolean scoreSent) {
         if (scoreSent) {
-            logger.info("Max score sent to the server successfully.");
+            logger.info("서버로 최고 점수 전송 성공.");
         } else {
-            logger.info("Failed to send max score to the server.");
+            logger.warning("서버로 최고 점수를 전송하는 데 실패했습니다.");
         }
     }
+
 
     // Existing method to send the score to the server
     private boolean sendScoreToServer(String userId, int maxScore, String currentGameMode) {
         try {
-            URL url = new URL("http://localhost:3000/score"); // Update with your server's endpoint URL
+        	URL url = new URL(SERVER_URL + "/score");
 
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("POST");

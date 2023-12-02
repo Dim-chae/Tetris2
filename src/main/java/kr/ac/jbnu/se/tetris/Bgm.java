@@ -11,11 +11,7 @@ public class Bgm {
     private static final Logger logger = Logger.getLogger(Bgm.class.getName());
 
     public Bgm() {
-        try {
-            // 오디오 파일을 로드합니다.
-            File audioFile = new File(AUDIO_FILE_PATH);
-            AudioInputStream audioStream = AudioSystem.getAudioInputStream(audioFile);
-
+        try (AudioInputStream audioStream = AudioSystem.getAudioInputStream(new File(AUDIO_FILE_PATH))) {
             // 오디오 포맷을 얻어옵니다.
             AudioFormat format = audioStream.getFormat();
 
@@ -31,7 +27,7 @@ public class Bgm {
             volumeControl = (FloatControl) audioClip.getControl(FloatControl.Type.MASTER_GAIN);
 
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-            logger.severe("Exception while initializing Bgm: " + e.getMessage());
+            logger.severe("Bgm initialization failed. Exception: " + e.getMessage());
         }
     }
 
