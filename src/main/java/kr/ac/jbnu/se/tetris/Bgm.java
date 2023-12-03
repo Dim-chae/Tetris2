@@ -7,7 +7,7 @@ import java.util.logging.Logger;
 public class Bgm {
     private Clip audioClip;
     private static final String AUDIO_FILE_PATH = "src\\main\\resources\\bgm.wav";
-    private FloatControl volumeControl; // 볼륨 조절 컨트롤
+    private FloatControl volumeControl;
     private static final Logger logger = Logger.getLogger(Bgm.class.getName());
 
     public Bgm() {
@@ -31,23 +31,23 @@ public class Bgm {
         }
     }
 
+    // 배경 음악 재생
     public void play() {
-        // 배경 음악 재생을 시작합니다.
         audioClip.start();
     }
 
+    // 배경 음악 정지
     public void stop() {
-        // 배경 음악 재생을 중지합니다.
         audioClip.stop();
     }
 
+    // 배경 음악 다시 재생
     public void replay() {
-        // 배경 음악을 처음부터 다시 재생합니다.
         audioClip.setFramePosition(0);
         audioClip.start();
     }
 
-    // Bgm 클래스의 setVolume 메서드 수정
+    // 배경 음악 볼륨 조절
     public void setVolume(float volume) {
         float gain = (0.20f * volume) - 20.0f;
         volumeControl.setValue(gain);

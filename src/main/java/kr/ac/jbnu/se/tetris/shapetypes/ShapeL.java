@@ -3,8 +3,7 @@ package kr.ac.jbnu.se.tetris.shapetypes;
 import java.awt.Color;
 import javax.swing.ImageIcon;
 
-import kr.ac.jbnu.se.tetris.Shape;
-import kr.ac.jbnu.se.tetris.Tetrominoes;
+import kr.ac.jbnu.se.tetris.*;
 
 public class ShapeL extends Shape {
     public ShapeL() {

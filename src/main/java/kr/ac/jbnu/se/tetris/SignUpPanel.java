@@ -24,7 +24,6 @@ public class SignUpPanel extends JPanel{
     private final JButton backButton = new JButton("Back");
     private static final Logger logger = Logger.getLogger(SignUpPanel.class.getName());
 
-
     public SignUpPanel(Tetris tetris){
         this.tetris = tetris;
         initUI();

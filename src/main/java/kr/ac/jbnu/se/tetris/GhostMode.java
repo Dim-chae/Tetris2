@@ -15,7 +15,7 @@ public class GhostMode extends Board {
 		if(isGameOver){
             super.drawSquare(g, x, y, shape);
         }
-        // 게임 오버가 아닐 시 원블록을 제외한 블록을 그리지 않음
+        // 게임 오버가 아닐 시 원 블록을 제외한 블록을 그리지 않음
         else{
             if(shape.getShape() != Tetrominoes.ONE_BLOCK_SHAPE) return;
             super.drawSquare(g, x, y, shape);
