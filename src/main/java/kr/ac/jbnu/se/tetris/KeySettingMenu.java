@@ -28,9 +28,9 @@ public class KeySettingMenu extends JPanel {
     private JButton btn6;
     private JButton btn7;
     private  JButton previousButton = null;
-    private static final String BUTTONFONT = "맑은 고딕";
-    public KeySettingMenu(Tetris tetris) {
+    private static final String BUTTON_FONT = "맑은 고딕";
 
+    public KeySettingMenu(Tetris tetris) {
         JButton saveButton = new JButton("Close");
         saveButton.setPreferredSize(new Dimension(200, 50));
         saveButton.setMinimumSize(new Dimension(200, 50));
@@ -38,7 +38,7 @@ public class KeySettingMenu extends JPanel {
         saveButton.addActionListener(e -> tetris.switchPanel(new SettingMenu(tetris)));
 
         JLabel keyLabel = new JLabel("조작키 변경", SwingConstants.CENTER);
-        keyLabel.setFont(new Font(BUTTONFONT, Font.BOLD, 18));
+        keyLabel.setFont(new Font(BUTTON_FONT, Font.BOLD, 18));
         JPanel panel = new JPanel();
         panel.setPreferredSize(new Dimension(200, 350));
         JPanel keyPanel = new JPanel();
@@ -74,26 +74,26 @@ public class KeySettingMenu extends JPanel {
     private JButton setStyledButton(JButton button) {
         button.setBackground(new Color(70, 130, 180));
         button.setForeground(Color.WHITE);
-        button.setFont(new Font(BUTTONFONT, Font.BOLD, 13));
+        button.setFont(new Font(BUTTON_FONT, Font.BOLD, 13));
         button.setFocusPainted(false);
         return button;
     }
 
     private void setKeyLabel() {
         key1 = new JLabel("아이템 사용");
-        key1.setFont(new Font(BUTTONFONT, Font.BOLD, 12));
+        key1.setFont(new Font(BUTTON_FONT, Font.BOLD, 12));
         key2 = new JLabel("블록 홀드");
-        key2.setFont(new Font(BUTTONFONT, Font.BOLD, 12));
+        key2.setFont(new Font(BUTTON_FONT, Font.BOLD, 12));
         key3 = new JLabel("소프트 드롭");
-        key3.setFont(new Font(BUTTONFONT, Font.BOLD, 12));
+        key3.setFont(new Font(BUTTON_FONT, Font.BOLD, 12));
         key4 = new JLabel("하드 드롭");
-        key4.setFont(new Font(BUTTONFONT, Font.BOLD, 12));
+        key4.setFont(new Font(BUTTON_FONT, Font.BOLD, 12));
         key5 = new JLabel("왼쪽 이동");
-        key5.setFont(new Font(BUTTONFONT, Font.BOLD, 12));
+        key5.setFont(new Font(BUTTON_FONT, Font.BOLD, 12));
         key6 = new JLabel("오른쪽 이동");
-        key6.setFont(new Font(BUTTONFONT, Font.BOLD, 12));
+        key6.setFont(new Font(BUTTON_FONT, Font.BOLD, 12));
         key7 = new JLabel("오른쪽 회전");
-        key7.setFont(new Font(BUTTONFONT, Font.BOLD, 12));
+        key7.setFont(new Font(BUTTON_FONT, Font.BOLD, 12));
     }
 
     private void setKeyButton() {
@@ -127,6 +127,7 @@ public class KeySettingMenu extends JPanel {
             previousButton = buttonName;
         });
     }
+
     private void setKeyListener(JButton buttonName, AtomicInteger key){
         buttonName.addKeyListener(new KeyAdapter() {
             @Override

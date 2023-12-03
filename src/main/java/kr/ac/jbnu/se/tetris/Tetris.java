@@ -4,7 +4,6 @@ import java.awt.*;
 import javax.swing.*;
 
 public class Tetris extends JFrame  {
-    
     private final transient Player player = new Player("", 0, 1, 0);
     private int bgmVolume = 100;
     private String currentGameMode;
@@ -17,7 +16,7 @@ public class Tetris extends JFrame  {
         setLayout(new BorderLayout());
         setLocationRelativeTo(null);
         setResizable(false);
-        add(new MainMenu(this));
+        add(new LoginPanel(this));
     }
 
     public void setUserId(String userId) {
@@ -56,7 +55,6 @@ public class Tetris extends JFrame  {
         panel.requestFocus();
     }
 
-
     public void setBgmVolume(int volume) {
         this.bgmVolume = volume;
     }
@@ -75,5 +73,4 @@ public class Tetris extends JFrame  {
         Tetris tetris = new Tetris();
         tetris.setVisible(true);
     }
-    
 }

@@ -4,7 +4,6 @@ import javax.swing.*;
 
 public class SprintMode extends Board{
     private static final int LINE_TO_CLEAR = 40;
-
     private final Timer sprintTimer;
     private float runningTime = 0;
 

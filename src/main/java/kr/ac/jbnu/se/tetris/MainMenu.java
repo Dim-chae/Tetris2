@@ -184,22 +184,6 @@ public class MainMenu extends JPanel {
         return false; // Score sending failed
     }
 
-    private static HttpURLConnection getHttpURLConnection(String userId, int maxScore, URL url) throws IOException {
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setRequestMethod("POST");
-        connection.setRequestProperty("Content-Type", "application/json");
-        connection.setDoOutput(true);
-
-        // JSON format for the request body
-        String jsonInputString = "{ \"user_id\": \"" + userId + "\", \"score\": " + maxScore + " }";
-        byte[] input = jsonInputString.getBytes(StandardCharsets.UTF_8);
-
-        try (OutputStream os = connection.getOutputStream()) {
-            os.write(input, 0, input.length);
-        }
-        return connection;
-    }
-
     // 서버로부터 최고 점수를 가져오는 메소드
     private int getMaxScoreFromServer(String userId) {
         try {

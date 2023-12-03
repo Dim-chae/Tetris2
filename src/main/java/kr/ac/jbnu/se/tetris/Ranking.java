@@ -16,25 +16,29 @@ import java.util.logging.Logger;
 import java.util.logging.Level;
 
 public class Ranking extends JPanel {
-    Tetris tetris;
+    private final Tetris tetris;
     private transient List<RankingEntry> rankingList;
-    transient Logger logger = Logger.getLogger(getClass().getName());
+    private final transient Logger logger = Logger.getLogger(getClass().getName());
     
     public Ranking(Tetris tetris, String selectedMode) {
         this.tetris = tetris;
         setLayout(new BorderLayout());
 
-        // 상단 패널
+        fetchRankingData(selectedMode); // 백엔드 서버와 통신하여 데이터 가져오기
+        addTitleLabel();
+        addCenterPanel();
+        addBackButton();
+    }
+
+    private void addTitleLabel() {
         JLabel titleLabel = new JLabel("랭킹", SwingConstants.CENTER);
         titleLabel.setFont(new Font("맑은 고딕", Font.BOLD, 32));
         add(titleLabel, BorderLayout.NORTH);
+    }
 
-        // 중앙 패널
+    private void addCenterPanel(){
         JPanel centerPanel = new JPanel(new GridLayout(0, 2, 10, 10));
         centerPanel.setBackground(Color.WHITE);
-
-        // 백엔드 서버로부터 랭킹 정보를 가져오는 코드
-        fetchRankingData(selectedMode); // 백엔드 서버와 통신하여 데이터 가져오기
 
         // 랭킹 정보를 표시
         if (rankingList != null) {
@@ -51,16 +55,14 @@ public class Ranking extends JPanel {
 
         JScrollPane scrollPane = new JScrollPane(centerPanel);
         add(scrollPane, BorderLayout.CENTER);
+    }
 
-        // 뒤로 가기 버튼
+    private void addBackButton(){
         JButton backButton = new JButton("뒤로 가기");
         backButton.setBackground(new Color(70, 130, 180));
         backButton.setForeground(Color.WHITE);
         backButton.setFont(new Font("맑은 고딕", Font.BOLD, 13));
-        backButton.addActionListener(e -> {
-            logger.info("뒤로 가기 버튼 선택됨");
-            tetris.switchPanel(new MainMenu(tetris));
-        });
+        backButton.addActionListener(e -> tetris.switchPanel(new MainMenu(tetris)));
         add(backButton, BorderLayout.SOUTH);
     }
 

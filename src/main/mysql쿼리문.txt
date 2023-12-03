@@ -1,0 +1,3 @@
+ALTER TABLE `score`
+ADD COLUMN `mode` varchar(20)
+DEFAULT NULL;

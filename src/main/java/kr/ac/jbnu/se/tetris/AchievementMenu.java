@@ -17,6 +17,7 @@ public class AchievementMenu extends JPanel {
         initUI();
     }
 
+    // UI 초기화
     private void initUI() {
         setLayout(new BorderLayout());
         addTitleLabel();
@@ -25,6 +26,7 @@ public class AchievementMenu extends JPanel {
         addBackButton();
     }
 
+    // 타이틀 라벨 추가
     private void addTitleLabel(){
         JLabel titleLabel = new JLabel("업적", SwingConstants.CENTER);
         titleLabel.setFont(new Font(FONT_NAME, Font.BOLD, 32));
@@ -35,12 +37,14 @@ public class AchievementMenu extends JPanel {
         add(titleLabel, BorderLayout.NORTH);
     }
 
+    // 센터 패널 추가
     private void addCenterPanel(){
         addAchievementListToScrollPane();
         centerPanel.setBackground(Color.WHITE);
         add(centerPanel, BorderLayout.CENTER);
     }
 
+    // 뒤로 가기 버튼 추가
     private void addBackButton(){
         JButton backButton = new JButton("뒤로 가기");
         backButton.setPreferredSize(new Dimension(100, 40));
@@ -50,13 +54,10 @@ public class AchievementMenu extends JPanel {
         backButton.setFocusPainted(false);
         backButton.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         add(backButton, BorderLayout.SOUTH);
-        backButton.addActionListener(e -> backButtonActionPerformed());
+        backButton.addActionListener(e -> tetris.switchPanel(new MainMenu(tetris)));
     }
 
-    private void backButtonActionPerformed() {
-        tetris.switchPanel(new MainMenu(tetris));
-    }
-
+    // 업적 목록을 스크롤 패널에 추가
     private void addAchievementListToScrollPane(){
         for (AchievementItem item : achievementList) {
             JLabel itemLabel = new JLabel(item.name() + " : " + item.description());
@@ -67,6 +68,7 @@ public class AchievementMenu extends JPanel {
         }
     }
 
+    // 스크롤 패널 추가
     private void addScrollPane(){
         JScrollPane scrollPane = new JScrollPane(centerPanel);
         add(scrollPane, BorderLayout.CENTER);
